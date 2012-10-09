@@ -6,6 +6,10 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>Andoria Client</name>
+    
+    <properties>
+        <android.sdk.path>f:/Users/Joe/android-sdks</android.sdk.path>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -36,7 +40,7 @@
                 <configuration>
                     <sdk>
                         <!-- platform or api level (api level 4 = platform 1.6)-->
-                        <platform>4</platform>
+                        <platform>16</platform>
                     </sdk>
                 </configuration>
             </plugin>

@@ -3,11 +3,12 @@ package net.joesoft.andoria;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import net.joesoft.andoria.gfx.AndoriaRenderEngine;
-import net.joesoft.andoria.listener.AndoriaTouchListener;
+import net.joesoft.andoria.gfx.RenderEngine;
+import net.joesoft.andoria.listener.TouchListener;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * The "Main class" of Andoria Client.
@@ -16,13 +17,15 @@ import android.os.Bundle;
  */
 public class MainActivity extends Activity {
 	private GLSurfaceView surfaceView;
+	private String LOGGER_NAME = MainActivity.class.toString();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i(LOGGER_NAME, "Andoria started");
 		surfaceView = new GLSurfaceView(this);
-		surfaceView.setRenderer(new AndoriaRenderEngine());
-		surfaceView.setOnTouchListener(new AndoriaTouchListener());
+		surfaceView.setRenderer(new RenderEngine());
+		surfaceView.setOnTouchListener(new TouchListener());
 	}
 
 	public void onDrawFrame(GL10 gl) {
