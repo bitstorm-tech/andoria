@@ -9,9 +9,9 @@ import javax.microedition.khronos.opengles.GL10;
 
 import net.joesoft.andoria.utils.Log;
 import android.opengl.GLSurfaceView.Renderer;
+import android.os.SystemClock;
 
 public class RenderEngine implements Renderer {
-	private final long SECOND = 1000000000;
 	private final Log log = new Log(RenderEngine.class);
 	private final FloatBuffer vertices;
 	private long secondCounter = 0;
@@ -32,16 +32,25 @@ public class RenderEngine implements Renderer {
 	}
 
 	public void onDrawFrame(GL10 gl) {
-		final long start = System.nanoTime();
+		final long start = SystemClock.elapsedRealtime();
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
 		gl.glDrawArrays(GL10.GL_TRIANGLES, 0, 3);
-		final long duration = System.nanoTime() - start;
+		try {
+			Thread.sleep(234);
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());
+		}
+		final long end = SystemClock.elapsedRealtime();
+		final long duration = end - start;
+		log.debug("Start:  :" + start);
+		log.debug("End     :" + end);
+		log.debug("Duration: " + duration);
 		secondCounter = secondCounter + duration;
-		log.debug("Second counter = " + secondCounter);
+		// log.debug("Second counter = " + secondCounter);
 		// show FPS only once a second
-		if (secondCounter > SECOND) {
-			final long fps = SECOND / duration;
+		if (secondCounter > 1000) {
+			final long fps = 1000 / duration;
 			log.info("FPS: " + fps);
 			secondCounter = 0;
 		}

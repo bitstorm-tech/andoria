@@ -1,0 +1,22 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	
+	dependencies {
+		classpath 'org.gradle.api.plugins:gradle-android-plugin:1.2.1'
+	}
+}
+
+version = "1.0.0-SNAPSHOT"
+group = "net.joesoft"
+
+apply plugin: 'android'
+
+repositories {
+	mavenCentral()
+}
+
+processResources {
+  expand (project.properties)
+}
