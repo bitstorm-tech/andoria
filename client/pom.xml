@@ -9,6 +9,7 @@
     
     <properties>
         <android.sdk.path>f:/Users/Joe/android-sdks</android.sdk.path>
+		<gdx.version>0.9.6</gdx.version>
     </properties>
 
     <dependencies>
@@ -18,11 +19,38 @@
             <version>1.6_r2</version>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+            <groupId>libgdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${gdx.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>libgdx</groupId>
+			<artifactId>gdx-backend-android</artifactId>
+			<version>${gdx.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>libgdx.natives</groupId>
+			<artifactId>libgdx</artifactId>
+			<version>${gdx.version}</version>
+			<type>so</type>
+		</dependency>
+		<dependency>
+            <groupId>libgdx.natives</groupId>
+			<artifactId>libandroidgl20</artifactId>
+			<version>${gdx.version}</version>
+			<type>so</type>
+		</dependency>
+		<dependency>
+            <groupId>libgdx.natives</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${gdx.version}</version>
+			<type>dll</type>
+		</dependency>
     </dependencies>
 	
     <build>
         <finalName>${project.artifactId}</finalName>
-        <sourceDirectory>src</sourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
