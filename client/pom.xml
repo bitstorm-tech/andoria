@@ -41,12 +41,6 @@
 			<version>${gdx.version}</version>
 			<type>so</type>
 		</dependency>
-		<dependency>
-            <groupId>libgdx.natives</groupId>
-			<artifactId>gdx</artifactId>
-			<version>${gdx.version}</version>
-			<type>dll</type>
-		</dependency>
     </dependencies>
 	
     <build>

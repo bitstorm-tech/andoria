@@ -34,6 +34,7 @@ public class RenderEngine {
 		} catch (InterruptedException e) {
 			log.error(e.getMessage());
 		}
+
 		final long end = SystemClock.elapsedRealtime();
 		final long duration = end - start;
 		log.debug("Start:  :" + start);
