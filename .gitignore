@@ -5,3 +5,6 @@ target
 bin
 gen
 .gradle
+.idea
+andoria-client.iml
+out
