@@ -1,13 +1,9 @@
 package net.joesoft.andoria.gfx;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Vector3;
 import net.joesoft.andoria.input.Keyboard;
 import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.Properties;
@@ -23,6 +19,7 @@ public class RenderEngine {
     private final Terrain terrain;
 	private final Text text;
 	private final Keyboard keyboard;
+	private final FPSLogger fpsLogger = new FPSLogger();
 
 	public RenderEngine() {
         terrain = new Terrain();
@@ -36,6 +33,7 @@ public class RenderEngine {
 		cam.update();
 		text = new Text(cam);
 		keyboard = new Keyboard(cam);
+		Gdx.graphics.setVSync(false);
 	}
 
 	public void render() {
@@ -56,9 +54,10 @@ public class RenderEngine {
 		final long duration = stopWatch.stop();
 		keyboard.moveCamera(5);
 		text.write("FPS: " + fps, 10, 10);
+		fpsLogger.log();
 
 		secondCounter = secondCounter + duration;
-		if (secondCounter > 500) {
+		if (secondCounter > 5000) {
 			fps = 1000 / duration;
 			log.info("FPS: " + fps);
 			secondCounter = 0;
@@ -71,16 +70,21 @@ public class RenderEngine {
     }
 
     private void renderTerrain() {
-        renderer.setProjectionMatrix(cam.combined);
-        renderer.begin(ShapeType.FilledRectangle);
-        renderer.setColor(new Color(1, 0, 0, 1));
-        renderer.filledRect(0, 0, 50, 50);
-
-        for(int x = 0; x < terrain.getTerrainSize(); ++x) {
-            for(int y = 0; y < terrain.getTerrainSize(); ++y) {
-                final Vector3 position = terrain.getPosition(x, y);
-                //renderer.filledRect(position.x, position.y, position.z, 1);
-            }
-        }
+		final Texture texture = new Texture(Gdx.files.classpath("textures/gras1.png"));
+		final SpriteBatch batch = new SpriteBatch();
+		batch.begin();
+		batch.draw(texture,0,0,500,500);
+		batch.end();
+//        renderer.setProjectionMatrix(cam.combined);
+//        renderer.begin(ShapeType.FilledRectangle);
+//        renderer.setColor(new Color(1, 0, 0, 1));
+//        renderer.filledRect(0, 0, 50, 50);
+//
+//        for(int x = 0; x < terrain.getTerrainSize(); ++x) {
+//            for(int y = 0; y < terrain.getTerrainSize(); ++y) {
+//                final Vector3 position = terrain.getPosition(x, y);
+//                //renderer.filledRect(position.x, position.y, position.z, 1);
+//            }
+//        }
     }
 }
