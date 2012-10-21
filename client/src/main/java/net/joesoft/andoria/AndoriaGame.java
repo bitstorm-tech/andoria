@@ -1,12 +1,12 @@
 package net.joesoft.andoria;
 
 import net.joesoft.andoria.gfx.GameScreen;
+import net.joesoft.andoria.utils.Log;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.utils.Logger;
 
 public class AndoriaGame extends Game {
-	private final Logger log = new Logger(AndoriaActivity.class.getCanonicalName());
+	private final Log log = new Log(this.getClass());
 
 	public void create() {
 		log.info("Andoria started");

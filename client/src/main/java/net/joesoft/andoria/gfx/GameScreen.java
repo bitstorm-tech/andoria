@@ -1,8 +1,6 @@
 package net.joesoft.andoria.gfx;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL10;
 
 public class GameScreen implements Screen {
 	final RenderEngine engine = new RenderEngine();
@@ -17,8 +15,6 @@ public class GameScreen implements Screen {
 	}
 
 	public void render(float arg0) {
-		Gdx.gl.glClearColor(0.0f, 0.5f, 0.5f, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		engine.render();
 	}
 
