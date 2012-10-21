@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>andoria-client-android</artifactId>
+	<packaging>apk</packaging>
+	<name>Andoria Client Android</name>
+	
+	<parent>
+		<groupId>net.joesoft.andoria</groupId>
+		<artifactId>andoria-client</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<android.sdk.path>f:/Users/Joe/android-sdks</android.sdk.path>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>andoria-client-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>1.6_r2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>libgdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${gdx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>libgdx</groupId>
+			<artifactId>gdx-backend-android</artifactId>
+			<version>${gdx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>libgdx.natives</groupId>
+			<artifactId>libgdx</artifactId>
+			<version>${gdx.version}</version>
+			<type>so</type>
+		</dependency>
+		<dependency>
+			<groupId>libgdx.natives</groupId>
+			<artifactId>libandroidgl20</artifactId>
+			<version>${gdx.version}</version>
+			<type>so</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>3.3.2</version>
+					<extensions>true</extensions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<!-- platform or api level (api level 4 = platform 1.6)-->
+						<platform>16</platform>
+					</sdk>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
