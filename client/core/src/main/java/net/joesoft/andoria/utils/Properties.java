@@ -1,10 +1,30 @@
 package net.joesoft.andoria.utils;
 
+import com.badlogic.gdx.graphics.Camera;
+
 public class Properties {
 	private static TargetPlatform targetPlatform = TargetPlatform.ANDROID;
 	private static int resolutionX = 1280;
 	private static int resolutionY = 800;
 	private static int logLevel = LogLevel.DEBUG;
+	private static float scrollDistance = 0.001f;
+	private static Camera camera;
+
+	public static Camera getCamera() {
+		return camera;
+	}
+
+	public static void setCamera(Camera camera) {
+		Properties.camera = camera;
+	}
+
+	public static float getScrollDistance() {
+		return scrollDistance;
+	}
+
+	public static void setScrollDistance(int scrollSpeed) {
+		Properties.scrollDistance = scrollSpeed;
+	}
 
 	public static int getLogLevel() {
 		return logLevel;

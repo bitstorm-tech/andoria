@@ -1,10 +1,8 @@
 package net.joesoft.andoria.gfx;
 
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.*;
 import net.joesoft.andoria.utils.Log;
+import net.joesoft.andoria.utils.Properties;
 
 public class Terrain {
 	private Log log = new Log(this.getClass());
@@ -15,6 +13,7 @@ public class Terrain {
 	}
 
 	public void render() {
+		final Camera camera = Properties.getCamera();
 		mesh.render(GL20.GL_TRIANGLES);
 	}
 
@@ -27,8 +26,8 @@ public class Terrain {
 
 		final float vertices[] = new float[]{
 			0, 0, 0,
-			10, 0, 0,
-			0, 10, 0
+			1, 0, 0,
+			0, 1, 0
 		};
 
 		mesh.setVertices(vertices);
