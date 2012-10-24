@@ -4,6 +4,15 @@ public class Properties {
 	private static TargetPlatform targetPlatform = TargetPlatform.ANDROID;
 	private static int resolutionX = 1280;
 	private static int resolutionY = 800;
+	private static int logLevel = LogLevel.DEBUG;
+
+	public static int getLogLevel() {
+		return logLevel;
+	}
+
+	public static void setLogLevel(int logLevel) {
+		Properties.logLevel = logLevel;
+	}
 
 	public static TargetPlatform getTargetPlatform() {
 		return targetPlatform;
