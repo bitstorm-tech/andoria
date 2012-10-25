@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import net.joesoft.andoria.input.KeyboardProcessor;
+import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.CoordinateSystem;
 import net.joesoft.andoria.utils.Log;
-import net.joesoft.andoria.utils.Properties;
 import net.joesoft.andoria.utils.StopWatch;
 
 public class RenderEngine {
@@ -20,12 +20,12 @@ public class RenderEngine {
 	private long frames = 0;
 
 	public RenderEngine() {
-		final Camera cam = new PerspectiveCamera(75, Properties.getResolutionX(), Properties.getResolutionY());
+		final Camera cam = new PerspectiveCamera(75, Context.getResolutionX(), Context.getResolutionY());
 		cam.far = 1000f;
 		cam.near = 1f;
 		cam.translate(0, -5, 5);
 		cam.lookAt(0, 0, 0);
-		Properties.setCamera(cam);
+		Context.setCamera(cam);
 		Gdx.graphics.setVSync(false);
 		Gdx.input.setInputProcessor(keyboardProcessor);
 	}
@@ -33,8 +33,8 @@ public class RenderEngine {
 	public void render() {
 		stopWatch.start();
 		keyboardProcessor.process();
-		Properties.getCamera().update();
-		Properties.getCamera().apply(Gdx.gl10);
+		Context.getCamera().update();
+		Context.getCamera().apply(Gdx.gl10);
 		clearScreen();
 
 		light.glow();

@@ -5,8 +5,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.Log;
-import net.joesoft.andoria.utils.Properties;
 
 public class Text {
 	private final Log log = new Log(this.getClass());
@@ -22,8 +22,8 @@ public class Text {
 	}
 
 	public void write(String text, int x, int y) {
-		final float posX = x - (Properties.getResolutionX()/2) + cam.position.x;
-		final float posY = y + (Properties.getResolutionY()/2) + cam.position.y - font.getCapHeight();
+		final float posX = x - (Context.getResolutionX()/2) + cam.position.x;
+		final float posY = y + (Context.getResolutionY()/2) + cam.position.y - font.getCapHeight();
 		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 		font.draw(spriteBatch, text, posX, posY);

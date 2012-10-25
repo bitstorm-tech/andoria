@@ -8,8 +8,8 @@ public class Log {
 	}
 
 	public void debug(final Object message) {
-		if(Properties.getLogLevel() <= LogLevel.DEBUG) {
-			if (Properties.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
+		if(Context.getLogLevel() <= LogLevel.DEBUG) {
+			if (Context.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
 				android.util.Log.d(loggerName, message.toString());
 			} else {
 				System.out.println("[DEBUG] [" + loggerName+ "] " + message);
@@ -18,8 +18,8 @@ public class Log {
 	}
 
 	public void info(final Object message) {
-		if(Properties.getLogLevel() <= LogLevel.INFO) {
-			if (Properties.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
+		if(Context.getLogLevel() <= LogLevel.INFO) {
+			if (Context.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
 				android.util.Log.i(loggerName, message.toString());
 			} else {
 				System.out.println("[INFO] [" + loggerName+ "] " + message);
@@ -28,8 +28,8 @@ public class Log {
 	}
 
 	public void warning(final Object message) {
-		if(Properties.getLogLevel() <= LogLevel.WARNING) {
-			if (Properties.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
+		if(Context.getLogLevel() <= LogLevel.WARNING) {
+			if (Context.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
 				android.util.Log.w(loggerName, message.toString());
 			} else {
 				System.out.println("[WARNING] [" + loggerName+ "] " + message);
@@ -38,8 +38,8 @@ public class Log {
 	}
 
 	public void error(final Object message) {
-		if(Properties.getLogLevel() <= LogLevel.ERROR) {
-			if (Properties.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
+		if(Context.getLogLevel() <= LogLevel.ERROR) {
+			if (Context.getTargetPlatform().equals(TargetPlatform.ANDROID)) {
 				android.util.Log.e(loggerName, message.toString());
 			} else {
 				System.out.println("[ERROR] [" + loggerName+ "] " + message);

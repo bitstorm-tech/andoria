@@ -2,7 +2,7 @@ package net.joesoft.andoria.utils;
 
 import com.badlogic.gdx.graphics.Camera;
 
-public class Properties {
+public class Context {
 	private static TargetPlatform targetPlatform = TargetPlatform.PC;
 	private static int resolutionX = 1280;
 	private static int resolutionY = 800;
@@ -16,7 +16,7 @@ public class Properties {
 	}
 
 	public static void setLight(boolean lightning) {
-		Properties.light = lightning;
+		Context.light = lightning;
 	}
 
 	public static Camera getCamera() {
@@ -24,7 +24,7 @@ public class Properties {
 	}
 
 	public static void setCamera(Camera camera) {
-		Properties.camera = camera;
+		Context.camera = camera;
 	}
 
 	public static float getScrollDistance() {
@@ -32,7 +32,7 @@ public class Properties {
 	}
 
 	public static void setScrollDistance(int scrollSpeed) {
-		Properties.scrollDistance = scrollSpeed;
+		Context.scrollDistance = scrollSpeed;
 	}
 
 	public static int getLogLevel() {
@@ -40,7 +40,7 @@ public class Properties {
 	}
 
 	public static void setLogLevel(int logLevel) {
-		Properties.logLevel = logLevel;
+		Context.logLevel = logLevel;
 	}
 
 	public static TargetPlatform getTargetPlatform() {
@@ -48,7 +48,7 @@ public class Properties {
 	}
 
 	public static void setTargetPlatform(TargetPlatform targetPlatform) {
-		Properties.targetPlatform = targetPlatform;
+		Context.targetPlatform = targetPlatform;
 	}
 
 	public static int getResolutionY() {
@@ -56,7 +56,7 @@ public class Properties {
 	}
 
 	public static void setResolutionY(int resolutionY) {
-		Properties.resolutionY = resolutionY;
+		Context.resolutionY = resolutionY;
 	}
 
 	public static int getResolutionX() {
@@ -64,6 +64,6 @@ public class Properties {
 	}
 
 	public static void setResolutionX(int resolutionX) {
-		Properties.resolutionX = resolutionX;
+		Context.resolutionX = resolutionX;
 	}
 }

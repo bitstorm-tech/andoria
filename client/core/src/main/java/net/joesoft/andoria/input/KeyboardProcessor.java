@@ -3,8 +3,8 @@ package net.joesoft.andoria.input;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
+import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.Log;
-import net.joesoft.andoria.utils.Properties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class KeyboardProcessor extends InputAdapter {
 	public boolean keyTyped(char c) {
 		if(c == 'l') {
 			log.debug("key L typed");
-			Properties.setLight(!Properties.getLight());
+			Context.setLight(!Context.getLight());
 		}
 
 		return true;
@@ -35,8 +35,8 @@ public class KeyboardProcessor extends InputAdapter {
 	}
 
 	public void process() {
-		final float distance = Properties.getScrollDistance();
-		final Camera camera = Properties.getCamera();
+		final float distance = Context.getScrollDistance();
+		final Camera camera = Context.getCamera();
 
 		if (pressedKeys.contains(Input.Keys.LEFT)) {
 			log.debug("key LEFT pressed");
