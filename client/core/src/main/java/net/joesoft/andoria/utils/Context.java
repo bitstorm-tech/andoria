@@ -1,69 +1,17 @@
 package net.joesoft.andoria.utils;
 
 import com.badlogic.gdx.graphics.Camera;
+import net.joesoft.andoria.input.KeyboardProcessor;
+import net.joesoft.andoria.input.MouseProcessor;
 
 public class Context {
-	private static TargetPlatform targetPlatform = TargetPlatform.PC;
-	private static int resolutionX = 1280;
-	private static int resolutionY = 800;
-	private static int logLevel = LogLevel.INFO;
-	private static float scrollDistance = 0.001f;
-	private static Camera camera;
-	private static boolean light = false;
-
-	public static boolean getLight() {
-		return light;
-	}
-
-	public static void setLight(boolean lightning) {
-		Context.light = lightning;
-	}
-
-	public static Camera getCamera() {
-		return camera;
-	}
-
-	public static void setCamera(Camera camera) {
-		Context.camera = camera;
-	}
-
-	public static float getScrollDistance() {
-		return scrollDistance;
-	}
-
-	public static void setScrollDistance(int scrollSpeed) {
-		Context.scrollDistance = scrollSpeed;
-	}
-
-	public static int getLogLevel() {
-		return logLevel;
-	}
-
-	public static void setLogLevel(int logLevel) {
-		Context.logLevel = logLevel;
-	}
-
-	public static TargetPlatform getTargetPlatform() {
-		return targetPlatform;
-	}
-
-	public static void setTargetPlatform(TargetPlatform targetPlatform) {
-		Context.targetPlatform = targetPlatform;
-	}
-
-	public static int getResolutionY() {
-		return resolutionY;
-	}
-
-	public static void setResolutionY(int resolutionY) {
-		Context.resolutionY = resolutionY;
-	}
-
-	public static int getResolutionX() {
-		return resolutionX;
-	}
-
-	public static void setResolutionX(int resolutionX) {
-		Context.resolutionX = resolutionX;
-	}
+	public static TargetPlatform targetPlatform = TargetPlatform.PC;
+	public static int resolutionX = 1280;
+	public static int resolutionY = 800;
+	public static int logLevel = LogLevel.INFO;
+	public static float scrollDistance = 0.001f;
+	public static Camera camera = null;
+	public static boolean light = false;
+	public static KeyboardProcessor keyboardProcessor = new KeyboardProcessor();
+	public static MouseProcessor mouseProcessor = new MouseProcessor();
 }

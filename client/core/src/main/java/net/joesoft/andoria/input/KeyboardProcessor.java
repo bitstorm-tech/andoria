@@ -17,7 +17,7 @@ public class KeyboardProcessor extends InputAdapter {
 	public boolean keyTyped(char c) {
 		if(c == 'l') {
 			log.debug("key L typed");
-			Context.setLight(!Context.getLight());
+			Context.light = !Context.light;
 		}
 
 		return true;
@@ -35,8 +35,8 @@ public class KeyboardProcessor extends InputAdapter {
 	}
 
 	public void process() {
-		final float distance = Context.getScrollDistance();
-		final Camera camera = Context.getCamera();
+		final float distance = Context.scrollDistance;
+		final Camera camera = Context.camera;
 
 		if (pressedKeys.contains(Input.Keys.LEFT)) {
 			log.debug("key LEFT pressed");

@@ -13,7 +13,7 @@ public class Ligth {
 	}
 
 	public void glow() {
-		if(Context.getLight()) {
+		if(Context.light) {
 			LOG.debug("light enabled");
 			Gdx.gl.glEnable(GL10.GL_LIGHTING);
 			Gdx.gl.glEnable(GL10.GL_LIGHT0);

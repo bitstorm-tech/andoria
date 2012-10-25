@@ -22,8 +22,8 @@ public class Text {
 	}
 
 	public void write(String text, int x, int y) {
-		final float posX = x - (Context.getResolutionX()/2) + cam.position.x;
-		final float posY = y + (Context.getResolutionY()/2) + cam.position.y - font.getCapHeight();
+		final float posX = x - (Context.resolutionX / 2) + cam.position.x;
+		final float posY = y + (Context.resolutionY / 2) + cam.position.y - font.getCapHeight();
 		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 		font.draw(spriteBatch, text, posX, posY);
