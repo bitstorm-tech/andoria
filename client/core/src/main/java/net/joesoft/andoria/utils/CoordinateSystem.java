@@ -7,6 +7,9 @@ public class CoordinateSystem {
 	private Mesh axis;
 	private boolean cameraAutoFollow = false;
 	private Vector3 originPosition = new Vector3(0, 0, 0);
+	private float colorX = Color.RED.toFloatBits();
+	private float colorY = Color.GREEN.toFloatBits();
+	private float colorZ = Color.BLUE.toFloatBits();
 
 	public CoordinateSystem() {
 		generate();
@@ -16,7 +19,7 @@ public class CoordinateSystem {
 	 * Render the coordinate system.
 	 */
 	public void render() {
-		axis.render(GL20.GL_LINES);
+		axis.render(GL20.GL_LINES, 0, 6);
 	}
 
 	/**
@@ -49,14 +52,14 @@ public class CoordinateSystem {
 
 	private void generate() {
 		axis = new Mesh(true, 18, 0,
-			new VertexAttribute(VertexAttributes.Usage.Position, 3, "coordinates")
-			//new VertexAttribute(VertexAttributes.Usage.Color, 4, "color")
+			new VertexAttribute(VertexAttributes.Usage.Position, 3, null),
+			new VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, null)
 		);
 
 		axis.setVertices(new float[]{
-			0, 0, 0, 2, 0, 0, //Color.toFloatBits(255, 0, 0, 255), // x-axis
-			0, 0, 0, 0, 2, 0, //Color.toFloatBits(0, 255, 0, 255), // y-axis
-			0, 0, 0, 0, 0, 2//, Color.toFloatBits(0, 0, 255, 255)  // z-axis
+			0, 0, 0, colorX, 2, 0, 0, colorX, // x-axis
+			0, 0, 0, colorY, 0, 2, 0, colorY, // y-axis
+			0, 0, 0, colorZ, 0, 0, 2, colorZ  // z-axis
 		});
 	}
 }
