@@ -25,13 +25,13 @@ public class RenderEngine {
 		cam.lookAt(0, 0, 0);
 		Context.camera = cam;
 		Gdx.graphics.setVSync(false);
-		Gdx.input.setInputProcessor(Context.keyboardProcessor);
 	}
 
 	public void render() {
 		stopWatch.start();
 
 		Context.keyboardProcessor.process();
+		Context.mouseProcessor.process();
 		Context.camera.update();
 		Context.camera.apply(Gdx.gl10);
 		clearScreen();
