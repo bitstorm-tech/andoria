@@ -5,18 +5,44 @@ import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class VertexBuffer {
 	private final float[] buffer;
 	private final VertexAttributes attributes;
 	private final int informationLength;
+	private List<Vector3> verticCoords = new ArrayList<Vector3>();
+	private List<Vector2> textureCoords = new ArrayList<Vector2>();
+	private List<Vector3> normals = new ArrayList<Vector3>();
 
-	public VertexBuffer(int size, final VertexAttributes pAttributes) {
+	public VertexBuffer(int size, final VertexAttributes attributes) {
 		buffer = new float[size];
-		attributes = pAttributes;
+		this.attributes = attributes;
 		informationLength = getInformationLength();
 	}
 
 	public float[] toFloatArray() {
+		int offset = getOffset(VertexAttributes.Usage.Position);
+
+		for(Vector3 coords : verticCoords) {
+			add(offset, coords.x, coords.y, coords.z);
+			offset += informationLength;
+		}
+
+		offset = getOffset(VertexAttributes.Usage.TextureCoordinates);
+		for(Vector2 coords : textureCoords) {
+			add(offset, coords.x, coords.y);
+			offset += informationLength;
+		}
+
+		offset = getOffset(VertexAttributes.Usage.Normal);
+		for(Vector3 normal : normals) {
+			add(offset, normal.x, normal.y, normal.z);
+			offset += informationLength;
+		}
+
 		return buffer;
 	}
 
@@ -50,31 +76,32 @@ public class VertexBuffer {
 		return length;
 	}
 
-	public void setNormals(Vector3... normals) {
-		int offset = getOffset(VertexAttributes.Usage.Normal);
-
-		for(Vector3 normal : normals) {
-			add(offset, normal.x, normal.y, normal.z);
-			offset += informationLength;
-		}
+	public void addNormals(Vector3... normals) {
+		this.normals.addAll(Arrays.asList(normals));
 	}
 
-	public void setTextureCoordinates(Vector2... textureCoordinates) {
-		int offset = getOffset(VertexAttributes.Usage.TextureCoordinates);
-
-		for(Vector2 coords : textureCoordinates) {
-			add(offset, coords.x, coords.y);
-			offset += informationLength;
-		}
+	public void addTextureCoordinates(Vector2... textureCoordinates) {
+		this.textureCoords.addAll(Arrays.asList(textureCoordinates));
 	}
 
 
-	public void setVerticCoordinates(Vector3... verticCoordinates) {
-		int offset = getOffset(VertexAttributes.Usage.Position);
+	public void addVerticCoordinates(Vector3... verticCoordinates) {
+		this.verticCoords.addAll(Arrays.asList(verticCoordinates));
+	}
 
-		for(Vector3 coords : verticCoordinates) {
-			add(offset, coords.x, coords.y, coords.z);
-			offset += informationLength;
+	public void calculateNormals() {
+		int index = 0;
+
+		while(index < verticCoords.size()) {
+			final Vector3 p1 = verticCoords.get(index++);
+			final Vector3 p2 = verticCoords.get(index++);
+			final Vector3 p3 = verticCoords.get(index++);
+
+			final Vector3 normal = Math3D.calcNormal(p1, p2, p3);
+
+			normals.add(normal);
+			normals.add(normal);
+			normals.add(normal);
 		}
 	}
 

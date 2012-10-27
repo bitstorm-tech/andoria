@@ -4,9 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import net.joesoft.andoria.utils.VertexBuffer;
 import net.joesoft.andoria.utils.Log;
-import net.joesoft.andoria.utils.Math3D;
+import net.joesoft.andoria.utils.VertexBuffer;
 
 import java.util.Random;
 
@@ -46,69 +45,33 @@ public class Terrain {
 		LOG.info("Normals Coords: " + numNormalsCoords);
 
 		mesh = new Mesh(true, numVerticeCoords + numTextureCoords + numNormalsCoords, 0, attributes);
+		final VertexBuffer buffer = new VertexBuffer(mesh.getMaxVertices(), attributes);
 
-		final Vector3[] verticCoordinates = new Vector3[sizeX * sizeY * 6];
-		final Vector3[] normals = new Vector3[sizeX * sizeY * 6];
-		final Vector2[] textureCoordinates = new Vector2[sizeX * sizeY * 6];
-
-		int index = 0;
 		for(int x = 0; x < sizeX; ++x) {
 			for(int y = 0; y < sizeY; ++y) {
 				// triangle 1 for quad
-				final Vector3 p1 = new Vector3((0f + x), (0f + y), heightmap[x][y]); // vertic coordinate
-				final Vector2 uv1 = new Vector2(0, 0); // texture coordinate
+				buffer.addVerticCoordinates(new Vector3((0f + x), (0f + y), heightmap[x][y]));
+				buffer.addTextureCoordinates(new Vector2(0, 0));
 
-				final Vector3 p2 = new Vector3((1f + x), (0f + y), heightmap[x + 1][y]); // vertic coordinate
-				final Vector2 uv2 = new Vector2(1, 0); // texture coordinate
+				buffer.addVerticCoordinates(new Vector3((1f + x), (0f + y), heightmap[x + 1][y]));
+				buffer.addTextureCoordinates(new Vector2(1, 0));
 
-				final Vector3 p3 = new Vector3((0f + x), (1f + y), heightmap[x][y + 1]); // vertic coordinate
-				final Vector2 uv3 = new Vector2(0, 1); // texture coordinate
+				buffer.addVerticCoordinates(new Vector3((0f + x), (1f + y), heightmap[x][y + 1]));
+				buffer.addTextureCoordinates(new Vector2(0, 1));
 
 				// triangle 2 for quad
-				final Vector3 p4 = new Vector3((0f + x), (1f + y), heightmap[x][y + 1]); // vertic coordinate
-				final Vector2 uv4 = new Vector2(0, 1); // texture coordinate
+				buffer.addVerticCoordinates(new Vector3((0f + x), (1f + y), heightmap[x][y + 1]));
+				buffer.addTextureCoordinates(new Vector2(0, 1));
 
-				final Vector3 p5 = new Vector3((1f + x), (0f + y), heightmap[x + 1][y]); // vertic coordinate
-				final Vector2 uv5 = new Vector2(1, 0); // texture coordinate
+				buffer.addVerticCoordinates(new Vector3((1f + x), (0f + y), heightmap[x + 1][y]));
+				buffer.addTextureCoordinates(new Vector2(1, 0));
 
-				final Vector3 p6 = new Vector3((1f + x), (1f + y), heightmap[x + 1][y + 1]); // vertic coordinate
-				final Vector2 uv6 = new Vector2(1, 1); // texture coordinate
-
-
-				final Vector3 n1 = Math3D.calcNormal(p1, p2, p3);
-				final Vector3 n2 = Math3D.calcNormal(p4, p5, p6);
-
-				verticCoordinates[index] = p1;
-				textureCoordinates[index] = uv1;
-				normals[index++] = n1;
-
-				verticCoordinates[index] = p2;
-				textureCoordinates[index] = uv2;
-				normals[index++] = n1;
-
-				verticCoordinates[index] = p3;
-				textureCoordinates[index] = uv3;
-				normals[index++] = n1;
-
-				verticCoordinates[index] = p4;
-				textureCoordinates[index] = uv4;
-				normals[index++] = n2;
-
-				verticCoordinates[index] = p5;
-				textureCoordinates[index] = uv5;
-				normals[index++] = n2;
-
-				verticCoordinates[index] = p6;
-				textureCoordinates[index] = uv6;
-				normals[index++] = n2;
+				buffer.addVerticCoordinates(new Vector3((1f + x), (1f + y), heightmap[x + 1][y + 1]));
+				buffer.addTextureCoordinates(new Vector2(1, 1));
 			}
 		}
 
-		final VertexBuffer buffer = new VertexBuffer(mesh.getMaxVertices(), attributes);
-		buffer.setNormals(normals);
-		buffer.setTextureCoordinates(textureCoordinates);
-		buffer.setVerticCoordinates(verticCoordinates);
-
+		buffer.calculateNormals();
 		mesh.setVertices(buffer.toFloatArray());
 	}
 
