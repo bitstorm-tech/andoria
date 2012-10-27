@@ -2,7 +2,6 @@ package net.joesoft.andoria.gfx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.VertexBuffer;
@@ -45,33 +44,24 @@ public class Terrain {
 		LOG.info("Normals Coords: " + numNormalsCoords);
 
 		mesh = new Mesh(true, numVerticeCoords + numTextureCoords + numNormalsCoords, 0, attributes);
-		final VertexBuffer buffer = new VertexBuffer(mesh.getMaxVertices(), attributes);
+		final VertexBuffer buffer = new VertexBuffer(attributes);
 
 		for(int x = 0; x < sizeX; ++x) {
 			for(int y = 0; y < sizeY; ++y) {
 				// triangle 1 for quad
 				buffer.addVerticCoordinates(new Vector3((0f + x), (0f + y), heightmap[x][y]));
-				buffer.addTextureCoordinates(new Vector2(0, 0));
-
 				buffer.addVerticCoordinates(new Vector3((1f + x), (0f + y), heightmap[x + 1][y]));
-				buffer.addTextureCoordinates(new Vector2(1, 0));
-
 				buffer.addVerticCoordinates(new Vector3((0f + x), (1f + y), heightmap[x][y + 1]));
-				buffer.addTextureCoordinates(new Vector2(0, 1));
 
 				// triangle 2 for quad
 				buffer.addVerticCoordinates(new Vector3((0f + x), (1f + y), heightmap[x][y + 1]));
-				buffer.addTextureCoordinates(new Vector2(0, 1));
-
 				buffer.addVerticCoordinates(new Vector3((1f + x), (0f + y), heightmap[x + 1][y]));
-				buffer.addTextureCoordinates(new Vector2(1, 0));
-
 				buffer.addVerticCoordinates(new Vector3((1f + x), (1f + y), heightmap[x + 1][y + 1]));
-				buffer.addTextureCoordinates(new Vector2(1, 1));
 			}
 		}
 
 		buffer.calculateNormals();
+		buffer.addStandardTextureCoordinates();
 		mesh.setVertices(buffer.toFloatArray());
 	}
 

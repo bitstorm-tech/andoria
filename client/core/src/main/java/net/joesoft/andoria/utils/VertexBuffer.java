@@ -10,36 +10,43 @@ import java.util.Arrays;
 import java.util.List;
 
 public class VertexBuffer {
-	private final float[] buffer;
 	private final VertexAttributes attributes;
 	private final int informationLength;
 	private List<Vector3> verticCoords = new ArrayList<Vector3>();
 	private List<Vector2> textureCoords = new ArrayList<Vector2>();
 	private List<Vector3> normals = new ArrayList<Vector3>();
+	public static Vector2[] standardTextureCoordinates = new Vector2[] {
+		new Vector2(0, 0),
+		new Vector2(1, 0),
+		new Vector2(0, 1),
+		new Vector2(0, 1),
+		new Vector2(1, 0),
+		new Vector2(1, 1)
+	};
 
-	public VertexBuffer(int size, final VertexAttributes attributes) {
-		buffer = new float[size];
+	public VertexBuffer(final VertexAttributes attributes) {
 		this.attributes = attributes;
 		informationLength = getInformationLength();
 	}
 
 	public float[] toFloatArray() {
-		int offset = getOffset(VertexAttributes.Usage.Position);
+		final float[] buffer = new float[(verticCoords.size() * 3) + (textureCoords.size() * 2) + (normals.size() * 3)];
 
+		int offset = getOffset(VertexAttributes.Usage.Position);
 		for(Vector3 coords : verticCoords) {
-			add(offset, coords.x, coords.y, coords.z);
+			add(buffer, offset, coords.x, coords.y, coords.z);
 			offset += informationLength;
 		}
 
 		offset = getOffset(VertexAttributes.Usage.TextureCoordinates);
 		for(Vector2 coords : textureCoords) {
-			add(offset, coords.x, coords.y);
+			add(buffer, offset, coords.x, coords.y);
 			offset += informationLength;
 		}
 
 		offset = getOffset(VertexAttributes.Usage.Normal);
 		for(Vector3 normal : normals) {
-			add(offset, normal.x, normal.y, normal.z);
+			add(buffer, offset, normal.x, normal.y, normal.z);
 			offset += informationLength;
 		}
 
@@ -105,7 +112,13 @@ public class VertexBuffer {
 		}
 	}
 
-	private void add(int offset, float... data) {
+	public void addStandardTextureCoordinates() {
+		for(int i = 0; i < verticCoords.size() / 6; ++i) {
+			addTextureCoordinates(standardTextureCoordinates);
+		}
+	}
+
+	private void add(final float[] buffer, int offset, float... data) {
 		for(float f : data) {
 			buffer[offset++] = f;
 		}

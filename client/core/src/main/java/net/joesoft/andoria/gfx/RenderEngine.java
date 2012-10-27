@@ -15,6 +15,7 @@ public class RenderEngine {
 	private final Terrain terrain = new Terrain();
 	private final CoordinateSystem coordinateSystem = new CoordinateSystem();
 	private final Ligth light = new Ligth();
+	private final Player player = new Player();
 	private long frames = 0;
 
 	public RenderEngine() {
@@ -45,6 +46,7 @@ public class RenderEngine {
 
 		light.glow();
 		terrain.render();
+		player.render();
 
 		frames++;
 
