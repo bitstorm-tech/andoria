@@ -30,6 +30,10 @@ public class KeyboardProcessor extends InputAdapter {
 			Context.wireframe = !Context.wireframe;
 		}
 
+		if(c == 'c') {
+			Context.showCoordinateSystem = !Context.showCoordinateSystem;
+		}
+
 		return true;
 	}
 

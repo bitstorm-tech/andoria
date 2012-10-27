@@ -9,7 +9,7 @@ public class Ligth {
 	private Log LOG = new Log(this.getClass());
 
 	public Ligth() {
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{0, 0, 1, 1}, 0);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{0, -1, 1, 1}, 0);
 	}
 
 	public void glow() {

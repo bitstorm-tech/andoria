@@ -36,8 +36,12 @@ public class RenderEngine {
 		Context.camera.apply(Gdx.gl10);
 		clearScreen();
 		switchPolygonMode();
+
+		if(Context.showCoordinateSystem) {
+			coordinateSystem.render();
+		}
+
 		light.glow();
-		coordinateSystem.render();
 		terrain.render();
 
 		frames++;
