@@ -25,6 +25,8 @@ public class RenderEngine {
 		cam.lookAt(0, 0, 0);
 		Context.camera = cam;
 		Gdx.graphics.setVSync(false);
+		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
+		Gdx.gl.glCullFace(GL10.GL_BACK);
 	}
 
 	public void render() {

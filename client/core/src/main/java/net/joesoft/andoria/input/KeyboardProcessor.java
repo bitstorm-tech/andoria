@@ -49,27 +49,27 @@ public class KeyboardProcessor extends InputAdapter {
 	}
 
 	public void process() {
-		final float distance = Context.scrollDistance;
+		final float speed = 1f / Context.scrollSpeed;
 		final Camera camera = Context.camera;
 
 		if (pressedKeys.contains(Input.Keys.LEFT)) {
 			log.debug("key LEFT pressed");
-			camera.translate(-distance, 0, 0);
+			camera.translate(-speed, 0, 0);
 		}
 
 		if (pressedKeys.contains(Input.Keys.RIGHT)) {
 			log.debug("key RIGHT pressed");
-			camera.translate(distance, 0, 0);
+			camera.translate(speed, 0, 0);
 		}
 
 		if (pressedKeys.contains(Input.Keys.UP)) {
 			log.debug("key UP pressed");
-			camera.translate(0, distance, 0);
+			camera.translate(0, speed, 0);
 		}
 
 		if (pressedKeys.contains(Input.Keys.DOWN)) {
 			log.debug("key DOWN pressed");
-			camera.translate(0, -distance, 0);
+			camera.translate(0, -speed, 0);
 		}
 	}
 }

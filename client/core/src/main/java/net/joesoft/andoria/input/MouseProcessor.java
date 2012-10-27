@@ -39,9 +39,9 @@ public class MouseProcessor extends InputAdapter {
 
 
 		if(pressedButtons.contains(Input.Buttons.LEFT)) {
-//			Gdx.input.setCursorPosition(Context.resolutionX / 2, Context.resolutionY / 2);
-			final float moveX = Gdx.input.getDeltaX() / 30f;
-			final float moveY = Gdx.input.getDeltaY() / 30f;
+			final float speed = Context.scrollSpeed;
+			final float moveX = Gdx.input.getDeltaX() / speed;
+			final float moveY = Gdx.input.getDeltaY() / speed;
 			Context.camera.translate(-moveX, moveY, 0);
 		}
 	}

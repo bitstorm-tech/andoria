@@ -13,6 +13,8 @@ public class Ligth {
 	}
 
 	public void glow() {
+		Gdx.gl10.glShadeModel(GL10.GL_SMOOTH);
+
 		if(Context.light) {
 			LOG.debug("light enabled");
 			Gdx.gl.glEnable(GL10.GL_LIGHTING);
