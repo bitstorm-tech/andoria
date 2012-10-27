@@ -35,7 +35,7 @@ public class RenderEngine {
 		Context.camera.update();
 		Context.camera.apply(Gdx.gl10);
 		clearScreen();
-
+		switchPolygonMode();
 		light.glow();
 		coordinateSystem.render();
 		terrain.render();
@@ -54,5 +54,15 @@ public class RenderEngine {
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+	}
+
+	private void switchPolygonMode() {
+		if(Context.wireframe) {
+			Gdx.gl10.glPolygonMode(GL10.GL_FRONT, GL10.GL_LINE);
+			Gdx.gl10.glPolygonMode(GL10.GL_BACK, GL10.GL_LINE);
+		} else {
+			Gdx.gl10.glPolygonMode(GL10.GL_FRONT, GL10.GL_FILL);
+			Gdx.gl10.glPolygonMode(GL10.GL_BACK, GL10.GL_FILL);
+		}
 	}
 }

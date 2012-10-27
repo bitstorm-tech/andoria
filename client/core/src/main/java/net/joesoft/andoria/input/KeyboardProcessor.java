@@ -18,6 +18,16 @@ public class KeyboardProcessor extends InputAdapter {
 		if(c == 'l') {
 			log.debug("key L typed");
 			Context.light = !Context.light;
+
+			if(Context.light) {
+				log.info("light on");
+			} else {
+				log.info("light off");
+			}
+		}
+
+		if(c == 'w') {
+			Context.wireframe = !Context.wireframe;
 		}
 
 		return true;

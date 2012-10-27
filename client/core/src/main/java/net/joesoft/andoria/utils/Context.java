@@ -12,6 +12,7 @@ public class Context {
 	public static float scrollDistance = 0.001f;
 	public static Camera camera = null;
 	public static boolean light = false;
+	public static boolean wireframe = false;
 	public static final KeyboardProcessor keyboardProcessor = new KeyboardProcessor();
 	public static final MouseProcessor mouseProcessor = new MouseProcessor();
 }
