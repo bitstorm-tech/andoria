@@ -3,7 +3,6 @@ package net.joesoft.andoria.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Camera;
 import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.Log;
 
@@ -16,19 +15,8 @@ public class MouseProcessor extends InputAdapter {
 
 	@Override
 	public boolean scrolled(int amount) {
-		final Camera cam = Context.camera;
-
-		if(amount == -1) {
-			LOG.debug("Scrolled -1");
-			cam.translate(0, 1, 1);
-		}
-
-		if(amount == 1) {
-			LOG.debug("Scrolled 1");
-			cam.translate(0, -1, -1);
-		}
-
-		cam.update();
+		LOG.debug("Scrolled");
+		Context.camera.translate(0, 0, amount);
 		return true;
 	}
 
@@ -47,8 +35,14 @@ public class MouseProcessor extends InputAdapter {
 	public void process() {
 		if(pressedButtons.contains(Input.Buttons.RIGHT)) {
 			Gdx.input.setCursorPosition(Context.resolutionX / 2, Context.resolutionY / 2);
-			final int moveX = Gdx.input.getDeltaX();
-			final int movey = Gdx.input.getDeltaY();
+		}
+
+
+		if(pressedButtons.contains(Input.Buttons.LEFT)) {
+//			Gdx.input.setCursorPosition(Context.resolutionX / 2, Context.resolutionY / 2);
+			final float moveX = Gdx.input.getDeltaX() / 30f;
+			final float moveY = Gdx.input.getDeltaY() / 30f;
+			Context.camera.translate(-moveX, moveY, 0);
 		}
 	}
 }
