@@ -8,10 +8,17 @@ public class Math3D {
 		final Vector3 u = p2.cpy().sub(p1);
 		final Vector3 v = p3.cpy().sub(p1);
 
-		float nx = u.x * v.z - u.z * v.y;
-		float ny = u.z * v.x - u.x * v.z;
-		float nz = u.x * v.y - u.y * v.x;
+		return u.crs(v);
+	}
 
-		return new Vector3(nx, ny, nz).nor();
+	public static Vector3 sum(Vector3... vectors) {
+		final int numVectors = vectors.length;
+		final Vector3 result = new Vector3(vectors[0]);
+
+		for(int i = 1; i < numVectors; ++i) {
+			result.add(vectors[i]);
+		}
+
+		return result;
 	}
 }
