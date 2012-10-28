@@ -19,7 +19,7 @@ public class RenderEngine {
 	private long frames = 0;
 
 	public RenderEngine() {
-		final Camera cam = new PerspectiveCamera(75, Context.resolutionX, Context.resolutionY);
+		final Camera cam = new PerspectiveCamera(60, Context.resolutionX, Context.resolutionY);
 		cam.far = 1000f;
 		cam.near = 1f;
 		cam.translate(0, -5, 5);
@@ -46,7 +46,7 @@ public class RenderEngine {
 
 		light.glow();
 		terrain.render();
-		player.render();
+//		player.render();
 
 		frames++;
 

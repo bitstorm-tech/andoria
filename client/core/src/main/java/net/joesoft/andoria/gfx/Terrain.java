@@ -12,8 +12,8 @@ public class Terrain {
 	private final Log LOG = new Log(this.getClass());
 	private Mesh mesh;
 	private Texture texture;
-	final int sizeX = 100;
-	final int sizeY = 100;
+	final int sizeX = 30;
+	final int sizeY = 30;
 	private float [][] heightmap;
 
 	public Terrain() {
