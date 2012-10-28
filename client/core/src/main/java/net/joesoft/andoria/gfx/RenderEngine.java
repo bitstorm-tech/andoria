@@ -21,7 +21,7 @@ public class RenderEngine {
 	public RenderEngine() {
 		final Camera cam = new PerspectiveCamera(60, Context.resolutionX, Context.resolutionY);
 		cam.far = 1000f;
-		cam.near = 1f;
+		cam.near = 0.1f;
 		cam.translate(0, -5, 5);
 		cam.lookAt(0, 0, 0);
 		Context.camera = cam;
@@ -46,7 +46,12 @@ public class RenderEngine {
 
 		light.glow();
 		terrain.render();
-//		player.render();
+		player.render();
+
+		if(Context.showNormals) {
+			terrain.renderNormals();
+			player.renderNormals();
+		}
 
 		frames++;
 

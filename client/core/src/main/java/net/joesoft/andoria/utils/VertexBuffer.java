@@ -12,7 +12,8 @@ import java.util.List;
 public class VertexBuffer {
 	private final VertexAttributes attributes;
 	private final int informationLength;
-	private List<Vector3> verticCoords = new ArrayList<Vector3>();
+	private List<Float> colors = new ArrayList<Float>();
+	private List<Vector3> vertexCoords = new ArrayList<Vector3>();
 	private List<Vector2> textureCoords = new ArrayList<Vector2>();
 	private List<Vector3> normals = new ArrayList<Vector3>();
 	public static Vector2[] standardTextureCoordinates = new Vector2[] {
@@ -26,28 +27,47 @@ public class VertexBuffer {
 
 	public VertexBuffer(final VertexAttributes attributes) {
 		this.attributes = attributes;
-		informationLength = getInformationLength();
+		informationLength = getVertexInformationSize();
 	}
 
 	public float[] toFloatArray() {
-		final float[] buffer = new float[(verticCoords.size() * 3) + (textureCoords.size() * 2) + (normals.size() * 3)];
+		final float[] buffer = new float[getBufferSize()];
 
 		int offset = getOffset(VertexAttributes.Usage.Position);
-		for(Vector3 coords : verticCoords) {
+		for(Vector3 coords : vertexCoords) {
 			add(buffer, offset, coords.x, coords.y, coords.z);
 			offset += informationLength;
 		}
 
-		offset = getOffset(VertexAttributes.Usage.TextureCoordinates);
-		for(Vector2 coords : textureCoords) {
-			add(buffer, offset, coords.x, coords.y);
-			offset += informationLength;
+		if(textureCoords.size() != 0) {
+			offset = getOffset(VertexAttributes.Usage.TextureCoordinates);
+			for(Vector2 coords : textureCoords) {
+				add(buffer, offset, coords.x, coords.y);
+				offset += informationLength;
+			}
 		}
 
-		offset = getOffset(VertexAttributes.Usage.Normal);
-		for(Vector3 normal : normals) {
-			add(buffer, offset, normal.x, normal.y, normal.z);
-			offset += informationLength;
+		if(normals.size() != 0) {
+			offset = getOffset(VertexAttributes.Usage.Normal);
+			for(Vector3 normal : normals) {
+				add(buffer, offset, normal.x, normal.y, normal.z);
+				offset += informationLength;
+			}
+		}
+
+		if(colors.size() != 0) {
+			offset = getOffset(VertexAttributes.Usage.ColorPacked);
+			if(colors.size() > 1) {
+				for(float color : colors) {
+					add(buffer, offset, color);
+					offset += informationLength;
+				}
+			} else {
+				while(offset < getNumberOfVertics()) {
+					add(buffer, offset, colors.get(0));
+					offset += informationLength;
+				}
+			}
 		}
 
 		return buffer;
@@ -74,10 +94,17 @@ public class VertexBuffer {
 		return offset;
 	}
 
-	private int getInformationLength() {
+	private int getVertexInformationSize() {
 		int length = 0;
 		for(int i = 0; i < attributes.size(); ++i) {
-			length += attributes.get(i).numComponents;
+			final VertexAttribute tmp = attributes.get(i);
+			// ColorPacked must be treated different because it has
+			// 4 components but needs only one float
+			if(tmp.usage == VertexAttributes.Usage.ColorPacked) {
+				length++;
+			} else {
+				length += tmp.numComponents;
+			}
 		}
 
 		return length;
@@ -92,17 +119,42 @@ public class VertexBuffer {
 	}
 
 
-	public void addVerticCoordinates(Vector3... verticCoordinates) {
-		this.verticCoords.addAll(Arrays.asList(verticCoordinates));
+	public void addVertexCoordinates(Vector3... verticCoordinates) {
+		this.vertexCoords.addAll(Arrays.asList(verticCoordinates));
+	}
+
+	public void addColors(Float... colors) {
+		this.colors.addAll(Arrays.asList(colors));
+	}
+
+	public List<Vector3> getNormals() {
+		return normals;
+	}
+
+	public List<Vector3> getVertexCoordinates() {
+		return vertexCoords;
+	}
+
+	public VertexAttributes getAttributes() {
+		return attributes;
+	}
+
+	public int getBufferSize() {
+		return getVertexInformationSize() * getNumberOfVertics();
+	}
+
+	public int getNumberOfVertics() {
+		return vertexCoords.size();
 	}
 
 	public void calculateNormals() {
 		int index = 0;
+		normals.clear();
 
-		while(index < verticCoords.size()) {
-			final Vector3 p1 = verticCoords.get(index++);
-			final Vector3 p2 = verticCoords.get(index++);
-			final Vector3 p3 = verticCoords.get(index++);
+		while(index < vertexCoords.size()) {
+			final Vector3 p1 = vertexCoords.get(index++);
+			final Vector3 p2 = vertexCoords.get(index++);
+			final Vector3 p3 = vertexCoords.get(index++);
 
 			final Vector3 normal = Math3D.calcNormal(p1, p2, p3);
 
@@ -112,8 +164,56 @@ public class VertexBuffer {
 		}
 	}
 
+	public void smoothNormals() {
+		final List<List<Integer>> sameCoords = getSameCoordinates();
+
+		for(List<Integer> same : sameCoords) {
+			final int numSame = same.size();
+			final Vector3[] _normals = new Vector3[numSame];
+			final int[] indices = new int[numSame];
+
+			for(int i = 0; i < numSame; ++i) {
+				final int index = same.get(i);
+				indices[i] = index;
+				_normals[i] = normals.get(index);
+			}
+
+			final Vector3 result = Math3D.sum(_normals).nor();
+
+			for(int i = 0; i < numSame; ++i) {
+				normals.set(indices[i], result);
+			}
+		}
+	}
+
+	private List<List<Integer>> getSameCoordinates() {
+		final List<List<Integer>> same = new ArrayList<List<Integer>>();
+		int index = 0;
+
+		for(Vector3 coordinate : vertexCoords) {
+			same.add(index, new ArrayList<Integer>());
+
+			for(int i = 0; i < vertexCoords.size(); ++i) {
+				final Vector3 other = vertexCoords.get(i);
+
+				if(coordinate.equals(other)) {
+					same.get(index).add(i);
+				}
+			}
+
+			// remove single coordinates
+			if(same.get(index).size() <= 1) {
+				same.remove(index);
+			} else {
+				index++;
+			}
+		}
+
+		return same;
+	}
+
 	public void addStandardTextureCoordinates() {
-		for(int i = 0; i < verticCoords.size() / 6; ++i) {
+		for(int i = 0; i < vertexCoords.size() / 6; ++i) {
 			addTextureCoordinates(standardTextureCoordinates);
 		}
 	}

@@ -14,6 +14,7 @@ public class Context {
 	public static boolean light = false;
 	public static boolean wireframe = false;
 	public static boolean showCoordinateSystem = false;
+	public static boolean showNormals = false;
 	public static final KeyboardProcessor keyboardProcessor = new KeyboardProcessor();
 	public static final MouseProcessor mouseProcessor = new MouseProcessor();
 }

@@ -34,6 +34,10 @@ public class KeyboardProcessor extends InputAdapter {
 			Context.showCoordinateSystem = !Context.showCoordinateSystem;
 		}
 
+		if(c == 'n') {
+			Context.showNormals = !Context.showNormals;
+		}
+
 		return true;
 	}
 
