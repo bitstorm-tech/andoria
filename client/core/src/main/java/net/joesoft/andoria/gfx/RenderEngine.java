@@ -17,6 +17,7 @@ public class RenderEngine {
 	private final Ligth light = new Ligth();
 	private final Player player = new Player();
 	private long frames = 0;
+	private float lightPosition = 0;
 
 	public RenderEngine() {
 		final Camera cam = new PerspectiveCamera(60, Context.resolutionX, Context.resolutionY);
@@ -32,6 +33,11 @@ public class RenderEngine {
 
 	public void render() {
 		stopWatch.start();
+		if(lightPosition > 50) {
+			lightPosition = 0;
+		} else {
+			lightPosition += 0.001;
+		}
 
 		Context.keyboardProcessor.process();
 		Context.mouseProcessor.process();
@@ -44,7 +50,9 @@ public class RenderEngine {
 			coordinateSystem.render();
 		}
 
+		light.move(lightPosition, lightPosition, 5);
 		light.glow();
+		light.render();
 		terrain.render();
 		player.render();
 
