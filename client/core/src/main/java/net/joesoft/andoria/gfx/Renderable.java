@@ -2,7 +2,6 @@ package net.joesoft.andoria.gfx;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -44,7 +43,5 @@ public abstract class Renderable {
 		normalsMesh.render(GL10.GL_LINES);
 	}
 
-	public void render() {
-		mesh.render(GL20.GL_TRIANGLES);
-	}
+	abstract  public void render();
 }

@@ -26,6 +26,7 @@ public class Terrain extends Renderable {
 		generate();
 	}
 
+	@Override
 	public void render() {
 		Gdx.gl10.glEnable(GL10.GL_TEXTURE_2D);
 		texture.bind();

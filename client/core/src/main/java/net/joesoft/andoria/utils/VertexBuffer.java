@@ -10,8 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class VertexBuffer {
-	private final VertexAttributes attributes;
-	private final int informationLength;
+	private VertexAttributes attributes;
 	private List<Float> colors = new ArrayList<Float>();
 	private List<Vector3> vertexCoords = new ArrayList<Vector3>();
 	private List<Vector2> textureCoords = new ArrayList<Vector2>();
@@ -25,13 +24,16 @@ public class VertexBuffer {
 		new Vector2(1, 1)
 	};
 
+	public VertexBuffer() {
+	}
+
 	public VertexBuffer(final VertexAttributes attributes) {
 		this.attributes = attributes;
-		informationLength = getVertexInformationSize();
 	}
 
 	public float[] toFloatArray() {
 		final float[] buffer = new float[getBufferSize()];
+		final int informationLength = getVertexInformationSize();
 
 		int offset = getOffset(VertexAttributes.Usage.Position);
 		for(Vector3 coords : vertexCoords) {
@@ -63,7 +65,7 @@ public class VertexBuffer {
 					offset += informationLength;
 				}
 			} else {
-				while(offset < getNumberOfVertics()) {
+				while(offset < getBufferSize()) {
 					add(buffer, offset, colors.get(0));
 					offset += informationLength;
 				}
@@ -84,7 +86,7 @@ public class VertexBuffer {
 				break;
 			}
 
-			offset += attribute.numComponents;
+			offset += getNumberOfComponents(attributes.get(i));
 		}
 
 		if(!typeAvailable) {
@@ -97,17 +99,23 @@ public class VertexBuffer {
 	private int getVertexInformationSize() {
 		int length = 0;
 		for(int i = 0; i < attributes.size(); ++i) {
-			final VertexAttribute tmp = attributes.get(i);
-			// ColorPacked must be treated different because it has
-			// 4 components but needs only one float
-			if(tmp.usage == VertexAttributes.Usage.ColorPacked) {
-				length++;
-			} else {
-				length += tmp.numComponents;
-			}
+			length += getNumberOfComponents(attributes.get(i));
 		}
 
 		return length;
+	}
+
+	private int getNumberOfComponents(VertexAttribute attribute) {
+		int number = 0;
+		// ColorPacked must be treated different because it has
+		// 4 components but needs only one float
+		if(attribute.usage == VertexAttributes.Usage.ColorPacked) {
+			number = 1;
+		} else {
+			number += attribute.numComponents;
+		}
+
+		return number;
 	}
 
 	public void addNormals(Vector3... normals) {
@@ -137,6 +145,10 @@ public class VertexBuffer {
 
 	public VertexAttributes getAttributes() {
 		return attributes;
+	}
+
+	public void setAttributes(VertexAttributes attributes) {
+		this.attributes = attributes;
 	}
 
 	public int getBufferSize() {

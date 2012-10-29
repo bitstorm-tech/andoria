@@ -5,13 +5,22 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import net.joesoft.andoria.utils.MeshGenerator;
 
 public class Player extends Renderable {
 	private final Texture texture;
 
 	public Player() {
+		final VertexAttributes attributes = new VertexAttributes(
+			new VertexAttribute(VertexAttributes.Usage.Position, 3, null),
+			new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, null),
+			new VertexAttribute(VertexAttributes.Usage.Normal, 3, null)
+		);
+
 		buffer = MeshGenerator.generateCube();
+		buffer.setAttributes(attributes);
 		buffer.calculateNormals();
 		buffer.smoothNormals();
 		buffer.addStandardTextureCoordinates();
