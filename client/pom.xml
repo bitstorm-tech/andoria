@@ -14,6 +14,6 @@
 	<modules>
 		<module>core</module>
 		<module>android</module>
-		<module>pc</module>
+		<module>win</module>
 	</modules>
 </project>
