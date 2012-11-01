@@ -1,9 +1,7 @@
 package net.joesoft.andoria.gfx;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.CoordinateSystem;
 import net.joesoft.andoria.utils.Log;
@@ -20,12 +18,6 @@ public class RenderEngine {
 	private float lightPosition = 0;
 
 	public RenderEngine() {
-		final Camera cam = new PerspectiveCamera(60, Context.resolutionX, Context.resolutionY);
-		cam.far = 1000f;
-		cam.near = 0.1f;
-		cam.translate(0, -5, 5);
-		cam.lookAt(0, 0, 0);
-		Context.camera = cam;
 		Gdx.graphics.setVSync(false);
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL10.GL_BACK);
@@ -42,7 +34,6 @@ public class RenderEngine {
 		Context.keyboardProcessor.process();
 		Context.mouseProcessor.process();
 		Context.camera.update();
-		Context.camera.apply(Gdx.gl10);
 		clearScreen();
 		switchPolygonMode();
 

@@ -33,10 +33,10 @@ public abstract class Renderable {
 			normal = vertex.tmp().add(normal);
 
 			vBuffer.addVertexCoordinates(new Vector3(vertex.x, vertex.y, vertex.z));
-			vBuffer.addColors(Color.WHITE.toFloatBits());
 			vBuffer.addVertexCoordinates(new Vector3(normal.x, normal.y, normal.z));
-			vBuffer.addColors(Color.WHITE.toFloatBits());
 		}
+
+		vBuffer.addColors(Color.WHITE.toFloatBits());
 
 		final Mesh normalsMesh = new Mesh(true, vBuffer.getBufferSize(), 0, attributes);
 		normalsMesh.setVertices(vBuffer.toFloatArray());

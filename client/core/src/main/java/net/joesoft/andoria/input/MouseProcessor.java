@@ -3,7 +3,6 @@ package net.joesoft.andoria.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.math.Vector3;
 import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.Log;
 
@@ -17,8 +16,7 @@ public class MouseProcessor extends InputAdapter {
 	@Override
 	public boolean scrolled(int amount) {
 		LOG.debug("Scrolled");
-		final Vector3 direction = Context.camera.direction;
-		Context.camera.translate(-amount * direction.x, -amount * direction.y, -amount * direction.z);
+		Context.camera.zoom(amount);
 		return true;
 	}
 
@@ -36,15 +34,12 @@ public class MouseProcessor extends InputAdapter {
 
 	public void process() {
 		if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-			Context.camera.rotate(-Gdx.input.getDeltaX(), 0, 0, 1);
+			Context.camera.changeLookAt(Gdx.input.getDeltaX(), 0);
 		}
 
 
 		if(pressedButtons.contains(Input.Buttons.LEFT)) {
-			final float speed = Context.scrollSpeed;
-			final float moveX = Gdx.input.getDeltaX() / speed;
-			final float moveY = Gdx.input.getDeltaY() / speed;
-			Context.camera.translate(-moveX, moveY, 0);
+			Context.camera.changePosition(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
 		}
 	}
 }
