@@ -11,6 +11,10 @@ import com.badlogic.gdx.math.Vector3;
 import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.VertexBuffer;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Random;
 
 public class Terrain extends Renderable {
@@ -21,8 +25,10 @@ public class Terrain extends Renderable {
 	private float [][] heightmap;
 
 	public Terrain() {
-		texture = new Texture(Gdx.files.classpath("textures/gras1.png"));
-		generateHeightMap();
+		texture = new Texture(Gdx.files.classpath("textures/ground1.jpg"));
+		heightmap = new float[sizeX + 1][sizeY + 1];
+//		generateHeightMap();
+		loadHeightMap();
 		generate();
 	}
 
@@ -72,12 +78,26 @@ public class Terrain extends Renderable {
 		mesh.setVertices(buffer.toFloatArray());
 	}
 
+	private void loadHeightMap() {
+		try {
+			final BufferedImage mapImage = ImageIO.read(Gdx.files.classpath("heightmaps/map1.png").read());
+
+			for(int x = 0; x <= sizeX; ++x) {
+				for(int y = 0; y <= sizeY; ++y) {
+					final Color color = new Color(mapImage.getRGB(x, y));
+					heightmap[x][y] = color.getGreen()/20;
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private void generateHeightMap() {
 		final Random rnd = new Random(System.currentTimeMillis());
-		heightmap = new float[sizeX + 1][sizeY + 1];
 
-		for(int x = 0; x < sizeX + 1; ++x) {
-			for(int y = 0; y < sizeY + 1; ++y) {
+		for(int x = 0; x <= sizeX; ++x) {
+			for(int y = 0; y <= sizeY; ++y) {
 				heightmap[x][y] = rnd.nextFloat();
 			}
 		}

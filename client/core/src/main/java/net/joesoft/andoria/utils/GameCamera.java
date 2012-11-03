@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.MathUtils;
 
 public class GameCamera {
-	private final Log log = new Log(this.getClass());
 	private float degree = 0;
 	private final Camera camera;
 
@@ -33,6 +32,7 @@ public class GameCamera {
 		camera.rotate(-deltaX, 0, 0, 1);
 
 		// the deltaY is the rotation around the x and y axis
+		// depending of the direction
 		final float x = MathUtils.cosDeg(degree);
 		final float y = MathUtils.sinDeg(degree);
 
