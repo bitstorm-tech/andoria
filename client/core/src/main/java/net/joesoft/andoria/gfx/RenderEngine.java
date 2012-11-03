@@ -33,7 +33,6 @@ public class RenderEngine {
 
 		Context.keyboardProcessor.process();
 		Context.mouseProcessor.process();
-		Context.camera.update();
 		clearScreen();
 		switchPolygonMode();
 

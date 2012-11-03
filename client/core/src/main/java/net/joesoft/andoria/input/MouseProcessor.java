@@ -34,7 +34,7 @@ public class MouseProcessor extends InputAdapter {
 
 	public void process() {
 		if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-			Context.camera.changeLookAt(Gdx.input.getDeltaX(), 0);
+			Context.camera.changeDirection(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
 		}
 
 

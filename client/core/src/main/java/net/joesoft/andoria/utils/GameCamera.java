@@ -21,14 +21,23 @@ public class GameCamera {
 
 	/**
 	 * Translates a two dimensional input into the resulting
-	 * 3 dimensional change of the "look at" of the camera.
+	 * 3 dimensional change of the direction of the camera.
 	 *
 	 * @param deltaX the 2D change on the x axis
 	 * @param deltaY the 2D change on the y axis
 	 */
-	public void changeLookAt(float deltaX, float deltaY) {
+	public void changeDirection(float deltaX, float deltaY) {
 		degree += deltaX;
+
+		// the deltaX is always the rotation around the z axis
 		camera.rotate(-deltaX, 0, 0, 1);
+
+		// the deltaY is the rotation around the x and y axis
+		final float x = MathUtils.cosDeg(degree);
+		final float y = MathUtils.sinDeg(degree);
+
+		camera.rotate(-deltaY, x, -y, 0);
+		update();
 	}
 
 	/**
@@ -50,6 +59,7 @@ public class GameCamera {
 		final float xx = (deltaX * MathUtils.sinDeg(degree - 90)) / speed;
 		final float xy = (deltaX * MathUtils.cosDeg(degree - 90)) / speed;
 		camera.translate(xx, xy, 0);
+		update();
 	}
 
 	/**
@@ -59,9 +69,10 @@ public class GameCamera {
 	 */
 	public void zoom(int direction) {
 		camera.translate(-direction * camera.direction.x, -direction * camera.direction.y, -direction * camera.direction.z);
+		update();
 	}
 
-	public void update() {
+	private void update() {
 		camera.update();
 		camera.apply(Gdx.gl10);
 	}
