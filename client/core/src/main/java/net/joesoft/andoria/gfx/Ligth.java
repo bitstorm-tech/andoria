@@ -7,13 +7,14 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.math.Vector3;
-import net.joesoft.andoria.utils.Context;
+import net.joesoft.andoria.model.MoveableObject;
 import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.MeshGenerator;
+import net.joesoft.andoria.utils.VertexBuffer;
 
-public class Ligth extends Renderable {
+public class Ligth extends MoveableObject {
 	private Log LOG = new Log(this.getClass());
-	private final Vector3 position = new Vector3(0, 0, 0);
+	private final Mesh mesh;
 
 	public Ligth() {
 		Gdx.gl10.glShadeModel(GL10.GL_SMOOTH);
@@ -27,7 +28,7 @@ public class Ligth extends Renderable {
 			new VertexAttribute(VertexAttributes.Usage.Normal, 3, null)
 		);
 
-		buffer = MeshGenerator.generateCube();
+		final VertexBuffer buffer = MeshGenerator.generateCube();
 		buffer.setAttributes(attributes);
 		buffer.addColors(Color.WHITE.toFloatBits());
 		buffer.calculateNormals();
@@ -37,31 +38,25 @@ public class Ligth extends Renderable {
 	}
 
 	public void move(float x, float y, float z) {
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{x, y, z, 1}, 0);
-		position.x = x;
-		position.y = y;
-		position.z = z;
+		final Vector3 newPosition = super.moveObject(x, y, z);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{newPosition.x, newPosition.y, newPosition.z, 1}, 0);
 	}
 
-	public void glow() {
-		if(Context.light) {
-			LOG.debug("light enabled");
-			Gdx.gl.glEnable(GL10.GL_LIGHTING);
-			Gdx.gl.glEnable(GL10.GL_LIGHT0);
-		} else {
-			LOG.debug("light disabled");
-			Gdx.gl.glDisable(GL10.GL_LIGHTING);
-			Gdx.gl.glDisable(GL10.GL_LIGHT0);
-		}
+	public void on() {
+		Gdx.gl.glEnable(GL10.GL_LIGHTING);
+		Gdx.gl.glEnable(GL10.GL_LIGHT0);
 	}
 
-	@Override
+	public void off() {
+		Gdx.gl.glDisable(GL10.GL_LIGHTING);
+		Gdx.gl.glDisable(GL10.GL_LIGHT0);
+	}
+
 	public void render() {
 		Gdx.gl.glDisable(GL10.GL_LIGHTING);
 		Gdx.gl10.glPushMatrix();
 		Gdx.gl10.glTranslatef(position.x, position.y, position.z);
 		mesh.render(GL10.GL_TRIANGLES);
 		Gdx.gl10.glPopMatrix();
-		glow();
 	}
 }

@@ -17,8 +17,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
-public class Terrain extends Renderable {
+public class Terrain {
 	private final Log LOG = new Log(this.getClass());
+	private Mesh mesh;
 	private Texture texture;
 	private final int sizeX = 50;
 	private final int sizeY = 50;
@@ -32,7 +33,6 @@ public class Terrain extends Renderable {
 		generate();
 	}
 
-	@Override
 	public void render() {
 		Gdx.gl10.glEnable(GL10.GL_TEXTURE_2D);
 		texture.bind();
@@ -56,7 +56,7 @@ public class Terrain extends Renderable {
 		LOG.info("Texture Coords: " + numTextureCoords);
 
 		mesh = new Mesh(true, numVertexCoords + numTextureCoords + numNormalsCoords, 0, attributes);
-		buffer = new VertexBuffer(attributes);
+		final VertexBuffer buffer = new VertexBuffer(attributes);
 
 		for(int x = 0; x < sizeX; ++x) {
 			for(int y = 0; y < sizeY; ++y) {

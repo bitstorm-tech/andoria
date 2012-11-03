@@ -1,11 +1,14 @@
 package net.joesoft.andoria.gfx;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
 import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.CoordinateSystem;
 import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.StopWatch;
+
+import java.util.List;
 
 public class RenderEngine {
 	private final Log log = new Log(this.getClass());
@@ -31,8 +34,9 @@ public class RenderEngine {
 			lightPosition += 0.001;
 		}
 
-		Context.keyboardProcessor.process();
-		Context.mouseProcessor.process();
+		moveCamera();
+		movePlayer();
+
 		clearScreen();
 		switchPolygonMode();
 
@@ -41,15 +45,12 @@ public class RenderEngine {
 		}
 
 		light.move(lightPosition, lightPosition, 5);
-		light.glow();
 		light.render();
+
+		light.on();
 		terrain.render();
 		player.render();
-
-		if(Context.showNormals) {
-			terrain.renderNormals();
-			player.renderNormals();
-		}
+		light.off();
 
 		frames++;
 
@@ -74,6 +75,39 @@ public class RenderEngine {
 		} else {
 			Gdx.gl10.glPolygonMode(GL10.GL_FRONT, GL10.GL_FILL);
 			Gdx.gl10.glPolygonMode(GL10.GL_BACK, GL10.GL_FILL);
+		}
+	}
+
+	private void moveCamera() {
+		final List<Integer> pressedButtons = Context.mouseProcessor.pressedButtons();
+
+		if(pressedButtons.contains(Input.Buttons.RIGHT)) {
+			Context.camera.changeDirection(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
+		}
+
+		if(pressedButtons.contains(Input.Buttons.LEFT)) {
+			Context.camera.changePosition(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
+		}
+	}
+
+	private void movePlayer() {
+		final List<Integer> pressedKeys = Context.keyboardProcessor.pressedKeys();
+
+		if(pressedKeys.contains(Input.Keys.UP)) {
+			player.move(0, 0.01f, 0);
+		}
+
+		if(pressedKeys.contains(Input.Keys.DOWN)) {
+			player.move(0, -0.01f, 0);
+
+		}
+
+		if(pressedKeys.contains(Input.Keys.LEFT)) {
+			player.move(-0.01f, 0, 0);
+		}
+
+		if(pressedKeys.contains(Input.Keys.RIGHT)) {
+			player.move(0.01f, 0, 0);
 		}
 	}
 }

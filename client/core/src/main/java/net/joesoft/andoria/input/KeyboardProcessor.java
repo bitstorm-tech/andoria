@@ -50,28 +50,7 @@ public class KeyboardProcessor extends InputAdapter {
 		return true;
 	}
 
-	public void process() {
-//		final float speed = 1f / Context.scrollSpeed;
-//		final Camera camera = Context.camera;
-//
-//		if (pressedKeys.contains(Input.Keys.LEFT)) {
-//			log.debug("key LEFT pressed");
-//			camera.translate(-speed, 0, 0);
-//		}
-//
-//		if (pressedKeys.contains(Input.Keys.RIGHT)) {
-//			log.debug("key RIGHT pressed");
-//			camera.translate(speed, 0, 0);
-//		}
-//
-//		if (pressedKeys.contains(Input.Keys.UP)) {
-//			log.debug("key UP pressed");
-//			camera.translate(0, speed, 0);
-//		}
-//
-//		if (pressedKeys.contains(Input.Keys.DOWN)) {
-//			log.debug("key DOWN pressed");
-//			camera.translate(0, -speed, 0);
-//		}
+	public List<Integer> pressedKeys() {
+		return pressedKeys;
 	}
 }

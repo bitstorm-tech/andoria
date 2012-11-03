@@ -1,7 +1,5 @@
 package net.joesoft.andoria.input;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.Log;
@@ -32,14 +30,7 @@ public class MouseProcessor extends InputAdapter {
 		return true;
 	}
 
-	public void process() {
-		if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-			Context.camera.changeDirection(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
-		}
-
-
-		if(pressedButtons.contains(Input.Buttons.LEFT)) {
-			Context.camera.changePosition(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
-		}
+	public List<Integer> pressedButtons() {
+		return pressedButtons;
 	}
 }
