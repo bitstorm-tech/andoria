@@ -13,7 +13,7 @@
 	
 	<modules>
 		<module>core</module>
-		<module>android</module>
+		<!--module>android</module-->
 		<module>win</module>
 	</modules>
 </project>
