@@ -5,8 +5,6 @@ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/target)
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/target)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/target)
 
-add_subdirectory(src)
-
-file(GLOB SOURCES *.cpp server/*.cpp)
+file(GLOB SOURCES src/*.cpp)
 
 add_executable(andoria-server ${SOURCES})
