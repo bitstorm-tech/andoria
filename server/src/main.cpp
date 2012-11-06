@@ -5,7 +5,7 @@
  * @version 1.0
  * @brief 6. November 2012
  */
-#include "server/server.hpp"
+#include "server.hpp"
 #include "andoriaserver.hpp"
 #include "configuration.hpp"
 

@@ -6,7 +6,7 @@
  * @brief 6. November 2012
  */
 // network
-#include "server/server.hpp"
+#include "server.hpp"
 // core
 #include "configuration.hpp"
 #include "andoriaserver.hpp"
