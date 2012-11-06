@@ -9,3 +9,7 @@ gen
 out
 *.iml
 hs_err_pid*.log
+CMakeCache.txt
+CMakeFiles
+*.cmake
+Makefile
