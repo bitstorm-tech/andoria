@@ -15,17 +15,8 @@ public abstract  class MoveableObject extends GameObject {
 		super(x, y, z);
 	}
 
-	/**
-	 * Moves the object to the given position.
-	 *
-	 * @param x position x
-	 * @param y position y
-	 * @param z position z
-	 *
-	 * @return the new position
-	 */
-	public Vector3 moveObject(float x, float y, float z) {
-		return  getPosition().add(x, y, z);
+	public Vector3 move(float distanceX, float distanceY, float distanceZ) {
+		return getPosition().add(distanceX, distanceY, distanceZ);
 	}
 
 	public void setDirection(float x, float y) {
