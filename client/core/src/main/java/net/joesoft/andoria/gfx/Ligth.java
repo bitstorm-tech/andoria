@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.math.Vector3;
 import net.joesoft.andoria.model.MoveableObject;
 import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.MeshGenerator;
@@ -17,32 +16,26 @@ public class Ligth extends MoveableObject {
 	private final Mesh mesh;
 
 	public Ligth() {
-		Gdx.gl10.glShadeModel(GL10.GL_SMOOTH);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{1, position.x, position.y, position.z}, 0);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, new float[]{1, 1, 1, 1}, 0);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, new float[]{1, 1, 1, 1}, 0);
-
 		final VertexAttributes attributes = new VertexAttributes(
 			new VertexAttribute(VertexAttributes.Usage.Position, 3, null),
 			new VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, null),
 			new VertexAttribute(VertexAttributes.Usage.Normal, 3, null)
 		);
 
-		final VertexBuffer buffer = MeshGenerator.generateCube();
+		final VertexBuffer buffer = MeshGenerator.generateCube(0.1f);
 		buffer.setAttributes(attributes);
 		buffer.addColors(Color.WHITE.toFloatBits());
 		buffer.calculateNormals();
-		mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
+		mesh = new Mesh(true, buffer.getBufferSize(), 0, attributes);
 		mesh.setVertices(buffer.toFloatArray());
-		mesh.scale(0.3f, 0.3f, 0.3f);
-	}
-
-	public void move(float x, float y, float z) {
-		final Vector3 newPosition = super.moveObject(x, y, z);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{newPosition.x, newPosition.y, newPosition.z, 1}, 0);
+		move(0, 0, 5);
 	}
 
 	public void on() {
+		Gdx.gl10.glShadeModel(GL10.GL_SMOOTH);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, new float[]{1, 1, 1, 1}, 0);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, new float[]{1, 1, 1, 1}, 0);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{position.x, position.y, position.z, 1}, 0);
 		Gdx.gl.glEnable(GL10.GL_LIGHTING);
 		Gdx.gl.glEnable(GL10.GL_LIGHT0);
 	}
@@ -53,7 +46,6 @@ public class Ligth extends MoveableObject {
 	}
 
 	public void render() {
-		Gdx.gl.glDisable(GL10.GL_LIGHTING);
 		Gdx.gl10.glPushMatrix();
 		Gdx.gl10.glTranslatef(position.x, position.y, position.z);
 		mesh.render(GL10.GL_TRIANGLES);
