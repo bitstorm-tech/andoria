@@ -28,7 +28,8 @@ public class Ligth extends MoveableObject {
 		buffer.calculateNormals();
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, attributes);
 		mesh.setVertices(buffer.toFloatArray());
-		move(0, 0, 5);
+		move(0, 0, 3);
+		setSpeed(1);
 	}
 
 	public void on() {

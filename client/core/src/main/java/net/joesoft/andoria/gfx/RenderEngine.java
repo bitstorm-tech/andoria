@@ -12,13 +12,14 @@ import java.util.List;
 
 public class RenderEngine {
 	private final Log log = new Log(this.getClass());
-	private final StopWatch stopWatch = new StopWatch();
+	private final StopWatch stopWatchFPS = new StopWatch();
+	private final StopWatch stopWatchRenderTime = new StopWatch();
 	private final Terrain terrain = new Terrain();
 	private final CoordinateSystem coordinateSystem = new CoordinateSystem();
 	private final Ligth light = new Ligth();
 	private final Player player = new Player();
 	private long frames = 0;
-	private float lightPosition = 0;
+	private long renderTime = 1;
 
 	public RenderEngine() {
 		Gdx.graphics.setVSync(false);
@@ -27,15 +28,12 @@ public class RenderEngine {
 	}
 
 	public void render() {
-		stopWatch.start();
-		if(lightPosition > 50) {
-			lightPosition = 0;
-		} else {
-			lightPosition += 0.001;
-		}
+		stopWatchFPS.start();
+		stopWatchRenderTime.start();
 
 		moveCamera();
-		movePlayer();
+		movePlayer(renderTime);
+//		moveLight(renderTime);
 
 		clearScreen();
 		switchPolygonMode();
@@ -44,7 +42,6 @@ public class RenderEngine {
 			coordinateSystem.render();
 		}
 
-		light.move(lightPosition, lightPosition, 5);
 		light.render();
 
 		light.on();
@@ -54,15 +51,28 @@ public class RenderEngine {
 
 		frames++;
 
-		if(stopWatch.elapsedTime() >= 1000) {
+		if(stopWatchFPS.elapsedTime() >= 1000) {
 			log.info("FPS: " + frames);
+			log.info("Light position: " + light.getPosition());
 			frames = 0;
-			stopWatch.stop();
+			stopWatchFPS.stop();
+		}
+
+		renderTime = stopWatchRenderTime.stop();
+
+		// Limit to max. 1000 FPS
+		if(renderTime == 0) {
+			renderTime = 1;
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
 	private void clearScreen() {
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -90,24 +100,41 @@ public class RenderEngine {
 		}
 	}
 
-	private void movePlayer() {
+	private void movePlayer(long renderTime) {
 		final List<Integer> pressedKeys = Context.keyboardProcessor.pressedKeys();
+		float speed = player.getSpeed();
+		boolean movePlayer = false;
+		float x = 0;
+		float y = 0;
 
 		if(pressedKeys.contains(Input.Keys.UP)) {
-			player.move(0, 0.01f, 0);
+			y += speed * (renderTime / 1000f);
+			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.DOWN)) {
-			player.move(0, -0.01f, 0);
-
+			y -= speed * (renderTime / 1000f);
+			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.LEFT)) {
-			player.move(-0.01f, 0, 0);
+			x -= speed * (renderTime / 1000f);
+			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.RIGHT)) {
-			player.move(0.01f, 0, 0);
+			x += speed * (renderTime / 1000f);
+			movePlayer = true;
 		}
+
+		if(movePlayer) {
+			player.move(x, y, 0);
+			player.getPosition().z = terrain.getHeight(player.getPosition().x, player.getPosition().y);
+		}
+	}
+
+	private void moveLight(long renderTime) {
+		final float lightSpeed = light.getSpeed();
+		light.move(lightSpeed * (renderTime/1000f), lightSpeed * (renderTime/1000f), 0);
 	}
 }

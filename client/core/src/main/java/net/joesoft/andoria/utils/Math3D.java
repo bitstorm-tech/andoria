@@ -21,4 +21,14 @@ public class Math3D {
 
 		return result;
 	}
+
+	public static float calcHeight(final Vector3 p1, final Vector3 p2, final Vector3 p3, float x, float y) {
+		final Vector3 n = calcNormal(p1, p2, p3);
+
+		if(n.z == 0) {
+			return 0;
+		}
+
+		return  (((n.x * (x - p1.x)) + (n.y * (y - p1.y))) / -n.z) + p1.z;
+	}
 }

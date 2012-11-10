@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.math.Vector3;
 import net.joesoft.andoria.utils.Log;
+import net.joesoft.andoria.utils.Math3D;
 import net.joesoft.andoria.utils.VertexBuffer;
 
 import javax.imageio.ImageIO;
@@ -26,7 +27,7 @@ public class Terrain {
 	private float [][] heightmap;
 
 	public Terrain() {
-		texture = new Texture(Gdx.files.classpath("textures/ground1.jpg"));
+		texture = new Texture(Gdx.files.classpath("textures/gras1.png"));
 		heightmap = new float[sizeX + 1][sizeY + 1];
 //		generateHeightMap();
 		loadHeightMap();
@@ -101,5 +102,48 @@ public class Terrain {
 				heightmap[x][y] = rnd.nextFloat();
 			}
 		}
+	}
+
+	public float getHeight(float x, float y) {
+		// when we are outside the terrain, return 0 by default
+		if(x > sizeX || y > sizeY || x < 0 || y < 0) {
+			return 0;
+		}
+
+		float fractionalX = x - (int)x;
+		float fractionalY = y - (int)y;
+
+		// bottom left
+		int x1 = (int)x;
+		int y1 = (int)y;
+
+		// bottom right
+		int x2 = x1 + 1;
+		int y2 = y1;
+
+		// top left
+		int x3 = x1;
+		int y3 = y1 + 1;
+
+		Vector3 p1;
+		Vector3 p2;
+		Vector3 p3;
+
+		// upper triangle
+		if(fractionalX + fractionalY > 1f) {
+			x1++;
+			y1++;
+			p1 = new Vector3(x1, y1, heightmap[x1][y1]);
+			p2 = new Vector3(x3, y3, heightmap[x3][y3]);
+			p3 = new Vector3(x2, y2, heightmap[x2][y2]);
+		}
+		// lower triangle
+		else {
+			p1 = new Vector3(x1, y1, heightmap[x1][y1]);
+			p2 = new Vector3(x2, y2, heightmap[x2][y2]);
+			p3 = new Vector3(x3, y3, heightmap[x3][y3]);
+		}
+
+		return Math3D.calcHeight(p1, p2, p3, x, y);
 	}
 }

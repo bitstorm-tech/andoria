@@ -16,7 +16,7 @@ public class Player extends MoveableObject {
 	private final Mesh mesh;
 
 	public Player() {
-		super(8, 8, 0);
+		super(1, 1, 0);
 		setSpeed(2f);
 		final VertexAttributes attributes = new VertexAttributes(
 			new VertexAttribute(VertexAttributes.Usage.Position, 3, null),

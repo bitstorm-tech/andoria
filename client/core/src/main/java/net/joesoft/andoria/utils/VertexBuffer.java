@@ -118,10 +118,6 @@ public class VertexBuffer {
 		return number;
 	}
 
-	public void addNormals(Vector3... normals) {
-		this.normals.addAll(Arrays.asList(normals));
-	}
-
 	public void addTextureCoordinates(Vector2... textureCoordinates) {
 		this.textureCoords.addAll(Arrays.asList(textureCoordinates));
 	}
