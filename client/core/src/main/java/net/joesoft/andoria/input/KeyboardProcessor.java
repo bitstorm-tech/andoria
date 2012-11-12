@@ -1,6 +1,7 @@
 package net.joesoft.andoria.input;
 
 import com.badlogic.gdx.InputAdapter;
+import net.joesoft.andoria.utils.CameraMode;
 import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.Log;
 
@@ -34,6 +35,14 @@ public class KeyboardProcessor extends InputAdapter {
 
 		if(c == 'n') {
 			Context.showNormals = !Context.showNormals;
+		}
+
+		if(c == 'm') {
+			if(Context.cameraMode == CameraMode.ATTACHED) {
+				Context.cameraMode = CameraMode.DETACHED;
+			} else {
+				Context.cameraMode = CameraMode.ATTACHED;
+			}
 		}
 
 		return true;

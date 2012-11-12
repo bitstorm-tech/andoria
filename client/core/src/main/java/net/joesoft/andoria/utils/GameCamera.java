@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 
 public class GameCamera {
 	private float degree = 0;
@@ -19,14 +20,27 @@ public class GameCamera {
 	}
 
 	/**
-	 * Translates a two dimensional input into the resulting
-	 * 3 dimensional change of the direction of the camera.
+	 * Rotates the camera around itself.
 	 *
 	 * @param deltaX the 2D change on the x axis
 	 * @param deltaY the 2D change on the y axis
 	 */
-	public void changeDirection(float deltaX, float deltaY) {
+	public void rotate(float deltaX, float deltaY) {
+		rotate(deltaX, deltaY, camera.position);
+	}
+
+	/**
+	 * Rotates the camera around the given object position.
+	 *
+	 * @param deltaX the 2D change on the x axis
+	 * @param deltaY the 2D change on the y axis
+	 * @param objectPosition the object position where the camera shall rotate around
+	 */
+	public void rotate(float deltaX, float deltaY, Vector3 objectPosition) {
 		degree += deltaX;
+
+		final float distance = objectPosition.dst(camera.position);
+		camera.position.set(objectPosition);
 
 		// the deltaX is always the rotation around the z axis
 		camera.rotate(-deltaX, 0, 0, 1);
@@ -35,8 +49,10 @@ public class GameCamera {
 		// depending of the direction
 		final float x = MathUtils.cosDeg(degree);
 		final float y = MathUtils.sinDeg(degree);
-
 		camera.rotate(-deltaY, x, -y, 0);
+
+		camera.translate(camera.direction.cpy().mul(-distance));
+
 		update();
 	}
 
@@ -47,7 +63,7 @@ public class GameCamera {
 	 * @param deltaX the 2D change on the x axis
 	 * @param deltaY the 2D change on the y axis
 	 */
-	public void changePosition(float deltaX, float deltaY) {
+	public void move(float deltaX, float deltaY) {
 		final float speed = Context.scrollSpeed;
 
 		// compute deltaY -> split it in a x and a y component

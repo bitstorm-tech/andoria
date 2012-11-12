@@ -3,6 +3,7 @@ package net.joesoft.andoria.gfx;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
+import net.joesoft.andoria.utils.CameraMode;
 import net.joesoft.andoria.utils.Context;
 import net.joesoft.andoria.utils.CoordinateSystem;
 import net.joesoft.andoria.utils.Log;
@@ -33,7 +34,7 @@ public class RenderEngine {
 
 		moveCamera();
 		movePlayer(renderTime);
-//		moveLight(renderTime);
+		moveLight(renderTime);
 
 		clearScreen();
 		switchPolygonMode();
@@ -53,7 +54,6 @@ public class RenderEngine {
 
 		if(stopWatchFPS.elapsedTime() >= 1000) {
 			log.info("FPS: " + frames);
-			log.info("Light position: " + light.getPosition());
 			frames = 0;
 			stopWatchFPS.stop();
 		}
@@ -91,12 +91,18 @@ public class RenderEngine {
 	private void moveCamera() {
 		final List<Integer> pressedButtons = Context.mouseProcessor.pressedButtons();
 
-		if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-			Context.camera.changeDirection(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
-		}
+		if(Context.cameraMode == CameraMode.DETACHED) {
+			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
+				Context.camera.rotate(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
+			}
 
-		if(pressedButtons.contains(Input.Buttons.LEFT)) {
-			Context.camera.changePosition(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
+			if(pressedButtons.contains(Input.Buttons.LEFT)) {
+				Context.camera.move(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
+			}
+		} else {
+			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
+				Context.camera.rotate(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f, player.getPosition());
+			}
 		}
 	}
 
@@ -134,7 +140,12 @@ public class RenderEngine {
 	}
 
 	private void moveLight(long renderTime) {
+		if(light.getPosition().x > 50) {
+			light.getPosition().set(0, 0, 3);
+		}
+
 		final float lightSpeed = light.getSpeed();
 		light.move(lightSpeed * (renderTime/1000f), lightSpeed * (renderTime/1000f), 0);
+		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
 	}
 }
