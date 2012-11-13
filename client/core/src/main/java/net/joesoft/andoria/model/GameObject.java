@@ -1,9 +1,11 @@
 package net.joesoft.andoria.model;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class GameObject {
 	protected Vector3 position = new Vector3();
+	protected float directionAngle = 0;
 
 	public GameObject() {
 	}

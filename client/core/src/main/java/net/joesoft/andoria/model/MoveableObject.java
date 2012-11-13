@@ -1,10 +1,11 @@
 package net.joesoft.andoria.model;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import net.joesoft.andoria.utils.Log;
 
 public abstract  class MoveableObject extends GameObject {
-	protected final Vector2 direction = new Vector2(0, 0);
+	private final Log log = new Log(this.getClass());
 	protected float speed;
 
 	public MoveableObject() {
@@ -16,15 +17,23 @@ public abstract  class MoveableObject extends GameObject {
 	}
 
 	public Vector3 move(float distanceX, float distanceY, float distanceZ) {
-		return getPosition().add(distanceX, distanceY, distanceZ);
+		final float offsetXX = MathUtils.cosDeg(directionAngle);
+		final float offsetXY = MathUtils.sinDeg(directionAngle);
+		getPosition().add(-distanceX * offsetXX, distanceX * offsetXY, distanceZ);
+
+		final float offsetYX = MathUtils.cosDeg(directionAngle - 90f);
+		final float offsetYY = MathUtils.sinDeg(directionAngle - 90f);
+		return getPosition().add(distanceY * offsetYX, -distanceY * offsetYY, distanceZ);
 	}
 
-	public void setDirection(float x, float y) {
-		direction.set(x, y);
-	}
+	public float rotate(float degree) {
+		directionAngle += degree;
 
-	public Vector2 getDirection() {
-		return direction;
+		if(directionAngle > 360f) {
+			directionAngle -= 360f;
+		}
+
+		return directionAngle;
 	}
 
 	public float getSpeed() {

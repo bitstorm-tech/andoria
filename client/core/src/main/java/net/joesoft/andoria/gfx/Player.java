@@ -43,6 +43,7 @@ public class Player extends MoveableObject {
 		Gdx.gl10.glPushMatrix();
 		// -0.15f to have the origin of the box in the middle (half of size)
 		Gdx.gl10.glTranslatef(position.x - 0.15f, position.y - 0.15f, position.z);
+		Gdx.gl10.glRotatef(-directionAngle, 0, 0, 1);
 		mesh.render(GL20.GL_TRIANGLES);
 		Gdx.gl10.glPopMatrix();
 

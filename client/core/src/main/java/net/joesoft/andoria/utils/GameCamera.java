@@ -64,17 +64,34 @@ public class GameCamera {
 	 * @param deltaY the 2D change on the y axis
 	 */
 	public void move(float deltaX, float deltaY) {
-		final float speed = Context.scrollSpeed;
+		move(deltaX, deltaY, 0);
+	}
+
+	/**
+	 * Translates a two dimensional input into the resulting
+	 * 3 dimensional change of the position of the camera.
+	 *
+	 * @param deltaX the 2D change on the x axis
+	 * @param deltaY the 2D change on the y axis
+	 * @param deltaZ the 2D change on the z axis
+	 */
+	public void move(float deltaX, float deltaY, float deltaZ) {
+		float speed = Context.scrollSpeed;
+
+		// In attached mode, the camera is as fast as the player moves
+		if(Context.cameraMode == CameraMode.ATTACHED) {
+			speed = 1;
+		}
 
 		// compute deltaY -> split it in a x and a y component
 		final float yx = (deltaY * MathUtils.sinDeg(degree)) / speed;
 		final float yy = (deltaY * MathUtils.cosDeg(degree)) / speed;
-		camera.translate(yx, yy, 0);
+		camera.translate(yx, yy, deltaZ);
 
 		// compute deltaX -> split it in a x and a y component
 		final float xx = (deltaX * MathUtils.sinDeg(degree - 90)) / speed;
 		final float xy = (deltaX * MathUtils.cosDeg(degree - 90)) / speed;
-		camera.translate(xx, xy, 0);
+		camera.translate(xx, xy, deltaZ);
 		update();
 	}
 

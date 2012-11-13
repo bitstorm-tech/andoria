@@ -8,6 +8,7 @@ public class Context {
 	public static int resolutionY = 800;
 	public static int logLevel = LogLevel.INFO;
 	public static float scrollSpeed = 30f;
+	public static float mouseSpeed = 0.7f;
 	public static boolean light = true;
 	public static boolean wireframe = false;
 	public static boolean showCoordinateSystem = false;

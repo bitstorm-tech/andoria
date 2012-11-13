@@ -19,6 +19,7 @@ public class RenderEngine {
 	private final CoordinateSystem coordinateSystem = new CoordinateSystem();
 	private final Ligth light = new Ligth();
 	private final Player player = new Player();
+	private final float SECOND = 1000f;
 	private long frames = 0;
 	private long renderTime = 1;
 
@@ -26,6 +27,7 @@ public class RenderEngine {
 		Gdx.graphics.setVSync(false);
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL10.GL_BACK);
+		light.rotate(45);
 	}
 
 	public void render() {
@@ -34,7 +36,7 @@ public class RenderEngine {
 
 		moveCamera();
 		movePlayer(renderTime);
-		moveLight(renderTime);
+//		moveLight(renderTime);
 
 		clearScreen();
 		switchPolygonMode();
@@ -52,7 +54,7 @@ public class RenderEngine {
 
 		frames++;
 
-		if(stopWatchFPS.elapsedTime() >= 1000) {
+		if(stopWatchFPS.elapsedTime() >= SECOND) {
 			log.info("FPS: " + frames);
 			frames = 0;
 			stopWatchFPS.stop();
@@ -90,18 +92,21 @@ public class RenderEngine {
 
 	private void moveCamera() {
 		final List<Integer> pressedButtons = Context.mouseProcessor.pressedButtons();
+		final float deltaX = Gdx.input.getDeltaX() * Context.mouseSpeed;
+		final float deltaY = Gdx.input.getDeltaY() * Context.mouseSpeed;
 
 		if(Context.cameraMode == CameraMode.DETACHED) {
 			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-				Context.camera.rotate(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
+				Context.camera.rotate(deltaX, deltaY);
 			}
 
 			if(pressedButtons.contains(Input.Buttons.LEFT)) {
-				Context.camera.move(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f);
+				Context.camera.move(deltaX, deltaY);
 			}
 		} else {
 			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-				Context.camera.rotate(Gdx.input.getDeltaX() * 0.7f, Gdx.input.getDeltaY() * 0.7f, player.getPosition());
+				Context.camera.rotate(deltaX, deltaY, player.getPosition());
+				player.rotate(deltaX);
 			}
 		}
 	}
@@ -114,28 +119,34 @@ public class RenderEngine {
 		float y = 0;
 
 		if(pressedKeys.contains(Input.Keys.UP)) {
-			y += speed * (renderTime / 1000f);
+			y += speed * (renderTime / SECOND);
 			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.DOWN)) {
-			y -= speed * (renderTime / 1000f);
+			y -= speed * (renderTime / SECOND);
 			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.LEFT)) {
-			x -= speed * (renderTime / 1000f);
+			x += speed * (renderTime / SECOND);
 			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.RIGHT)) {
-			x += speed * (renderTime / 1000f);
+			x -= speed * (renderTime / SECOND);
 			movePlayer = true;
 		}
 
 		if(movePlayer) {
+			final float oldHeight = player.getPosition().z;
 			player.move(x, y, 0);
-			player.getPosition().z = terrain.getHeight(player.getPosition().x, player.getPosition().y);
+			final float newHeight = terrain.getHeight(player.getPosition().x, player.getPosition().y);
+			player.getPosition().z = newHeight;
+
+			if(Context.cameraMode == CameraMode.ATTACHED) {
+				Context.camera.move(x, y, newHeight - oldHeight);
+			}
 		}
 	}
 
@@ -145,7 +156,7 @@ public class RenderEngine {
 		}
 
 		final float lightSpeed = light.getSpeed();
-		light.move(lightSpeed * (renderTime/1000f), lightSpeed * (renderTime/1000f), 0);
+		light.move(lightSpeed * (renderTime/SECOND), lightSpeed * (renderTime/SECOND), 0);
 		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
 	}
 }
