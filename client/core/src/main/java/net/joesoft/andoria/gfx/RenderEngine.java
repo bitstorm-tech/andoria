@@ -3,11 +3,7 @@ package net.joesoft.andoria.gfx;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
-import net.joesoft.andoria.utils.CameraMode;
-import net.joesoft.andoria.utils.Context;
-import net.joesoft.andoria.utils.CoordinateSystem;
-import net.joesoft.andoria.utils.Log;
-import net.joesoft.andoria.utils.StopWatch;
+import net.joesoft.andoria.utils.*;
 
 import java.util.List;
 
@@ -17,6 +13,7 @@ public class RenderEngine {
 	private final StopWatch stopWatchRenderTime = new StopWatch();
 	private final Terrain terrain = new Terrain();
 	private final CoordinateSystem coordinateSystem = new CoordinateSystem();
+	public static final GameCamera camera = new GameCamera();
 	private final Ligth light = new Ligth();
 	private final Player player = new Player();
 	private final float SECOND = 1000f;
@@ -27,7 +24,7 @@ public class RenderEngine {
 		Gdx.graphics.setVSync(false);
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL10.GL_BACK);
-		light.rotate(45);
+		light.rotate(90);
 	}
 
 	public void render() {
@@ -36,7 +33,7 @@ public class RenderEngine {
 
 		moveCamera();
 		movePlayer(renderTime);
-//		moveLight(renderTime);
+		moveLight(renderTime);
 
 		clearScreen();
 		switchPolygonMode();
@@ -92,23 +89,26 @@ public class RenderEngine {
 
 	private void moveCamera() {
 		final List<Integer> pressedButtons = Context.mouseProcessor.pressedButtons();
+		final int scrolled = Context.mouseProcessor.getScrolled();
 		final float deltaX = Gdx.input.getDeltaX() * Context.mouseSpeed;
 		final float deltaY = Gdx.input.getDeltaY() * Context.mouseSpeed;
 
 		if(Context.cameraMode == CameraMode.DETACHED) {
 			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-				Context.camera.rotate(deltaX, deltaY);
+				camera.rotate(deltaX, deltaY);
 			}
 
 			if(pressedButtons.contains(Input.Buttons.LEFT)) {
-				Context.camera.move(deltaX, deltaY);
+				camera.move(deltaX, deltaY);
 			}
 		} else {
 			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-				Context.camera.rotate(deltaX, deltaY, player.getPosition());
+				camera.rotate(deltaX, deltaY, player.getPosition());
 				player.rotate(deltaX);
 			}
 		}
+
+		camera.zoom(scrolled);
 	}
 
 	private void movePlayer(long renderTime) {
@@ -145,7 +145,8 @@ public class RenderEngine {
 			player.getPosition().z = newHeight;
 
 			if(Context.cameraMode == CameraMode.ATTACHED) {
-				Context.camera.move(x, y, newHeight - oldHeight);
+				camera.lookAt(player.getPosition());
+				camera.move(x, y, newHeight - oldHeight);
 			}
 		}
 	}

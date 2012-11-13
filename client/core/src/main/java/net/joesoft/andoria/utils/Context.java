@@ -16,6 +16,5 @@ public class Context {
 	public static CameraMode cameraMode = CameraMode.ATTACHED;
 	public static final KeyboardProcessor keyboardProcessor = new KeyboardProcessor();
 	public static final MouseProcessor mouseProcessor = new MouseProcessor();
-	public static final GameCamera camera = new GameCamera();
 	public static final TargetPlatform targetPlatform = TargetPlatform.PC;
 }

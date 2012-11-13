@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector3;
 
 public class GameCamera {
 	private float degree = 0;
+	private float zoom = 5f;
 	private final Camera camera;
+	private final Vector3 lookAt = new Vector3();
 
 	public GameCamera() {
 		camera = new PerspectiveCamera(60, Context.resolutionX, Context.resolutionY);
@@ -39,7 +41,6 @@ public class GameCamera {
 	public void rotate(float deltaX, float deltaY, Vector3 objectPosition) {
 		degree += deltaX;
 
-		final float distance = objectPosition.dst(camera.position);
 		camera.position.set(objectPosition);
 
 		// the deltaX is always the rotation around the z axis
@@ -51,7 +52,7 @@ public class GameCamera {
 		final float y = MathUtils.sinDeg(degree);
 		camera.rotate(-deltaY, x, -y, 0);
 
-		camera.translate(camera.direction.cpy().mul(-distance));
+		camera.translate(camera.direction.cpy().mul(-zoom));
 
 		update();
 	}
@@ -98,15 +99,26 @@ public class GameCamera {
 	/**
 	 * Moves (zooms) the camera in the "look at" direction.
 	 *
-	 * @param direction negative values means zoom in, positive values means zoom out
+	 * @param ammount negative values means zoom in, positive values means zoom out
 	 */
-	public void zoom(int direction) {
-		camera.translate(-direction * camera.direction.x, -direction * camera.direction.y, -direction * camera.direction.z);
+	public void zoom(float ammount) {
+		zoom += ammount;
+		camera.translate(-ammount * camera.direction.x, -ammount * camera.direction.y, -ammount * camera.direction.z);
 		update();
 	}
 
+	public void lookAt(Vector3 lookAt) {
+		this.lookAt.set(lookAt);
+	}
+
 	private void update() {
+		correctDistance();
 		camera.update();
 		camera.apply(Gdx.gl10);
+	}
+
+	private void correctDistance() {
+		camera.position.set(lookAt);
+		camera.translate(-zoom * camera.direction.x, -zoom * camera.direction.y, -zoom * camera.direction.z);
 	}
 }
