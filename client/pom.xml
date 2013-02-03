@@ -8,7 +8,7 @@
 	<name>Andoria Client</name>
 
 	<properties>
-		<gdx.version>0.9.6</gdx.version>
+		<libgdx.version>0.9.9-SNAPSHOT</libgdx.version>
 	</properties>
 	
 	<modules>

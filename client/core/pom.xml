@@ -11,21 +11,22 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<properties>
-		<gdx.version>0.9.6</gdx.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
-			<groupId>libgdx</groupId>
+			<groupId>com.badlogic.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>${gdx.version}</version>
+			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>1.6_r2</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.9</version>
 		</dependency>
 	</dependencies>
 </project>
