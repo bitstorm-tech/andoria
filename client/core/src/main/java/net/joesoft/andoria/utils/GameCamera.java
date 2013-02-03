@@ -13,7 +13,7 @@ public class GameCamera {
 	private final Vector3 lookAt = new Vector3();
 
 	public GameCamera() {
-		camera = new PerspectiveCamera(60, Context.resolutionX, Context.resolutionY);
+		camera = new PerspectiveCamera(60, Settings.getResolutionX(), Settings.getResolutionY());
 		camera.far = 1000f;
 		camera.near = 0.1f;
 		camera.translate(0, -5, 5);
@@ -77,10 +77,10 @@ public class GameCamera {
 	 * @param deltaZ the 2D change on the z axis
 	 */
 	public void move(float deltaX, float deltaY, float deltaZ) {
-		float speed = Context.scrollSpeed;
+		float speed = Settings.getScrollSpeed();
 
 		// In attached mode, the camera is as fast as the player moves
-		if(Context.cameraMode == CameraMode.ATTACHED) {
+		if(Settings.getCameraMode() == CameraMode.ATTACHED) {
 			speed = 1;
 		}
 

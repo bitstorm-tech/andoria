@@ -2,7 +2,7 @@ package net.joesoft.andoria.input;
 
 import com.badlogic.gdx.InputAdapter;
 import net.joesoft.andoria.utils.CameraMode;
-import net.joesoft.andoria.utils.Context;
+import net.joesoft.andoria.utils.Settings;
 import net.joesoft.andoria.utils.Log;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ public class KeyboardProcessor extends InputAdapter {
 	public boolean keyTyped(char c) {
 		if(c == 'l') {
 			log.debug("key L typed");
-			Context.light = !Context.light;
+			Settings.setLight(!Settings.isLight());
 
-			if(Context.light) {
+			if(Settings.isLight()) {
 				log.info("light on");
 			} else {
 				log.info("light off");
@@ -26,22 +26,22 @@ public class KeyboardProcessor extends InputAdapter {
 		}
 
 		if(c == 'w') {
-			Context.wireframe = !Context.wireframe;
+			Settings.setWireframe(!Settings.isWireframe());
 		}
 
 		if(c == 'c') {
-			Context.showCoordinateSystem = !Context.showCoordinateSystem;
+			Settings.setShowCoordinateSystem(!Settings.isShowCoordinateSystem());
 		}
 
 		if(c == 'n') {
-			Context.showNormals = !Context.showNormals;
+			Settings.setShowNormals(!Settings.isShowNormals());
 		}
 
 		if(c == 'm') {
-			if(Context.cameraMode == CameraMode.ATTACHED) {
-				Context.cameraMode = CameraMode.DETACHED;
+			if(Settings.getCameraMode() == CameraMode.ATTACHED) {
+				Settings.setCameraMode(CameraMode.DETACHED);
 			} else {
-				Context.cameraMode = CameraMode.ATTACHED;
+				Settings.setCameraMode(CameraMode.ATTACHED);
 			}
 		}
 

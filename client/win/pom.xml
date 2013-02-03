@@ -56,24 +56,24 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>libgdx</groupId>
+			<groupId>com.badlogic.gdx</groupId>
 			<artifactId>gdx</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>libgdx</groupId>
+			<groupId>com.badlogic.gdx</groupId>
 			<artifactId>gdx-backend-lwjgl</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>libgdx</groupId>
+		<!--dependency>
+			<groupId>com.badlogic.gdx</groupId>
 			<artifactId>gdx-natives</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>libgdx</groupId>
+			<groupId>com.badlogic.gdx</groupId>
 			<artifactId>gdx-backend-lwjgl-natives</artifactId>
 			<version>${libgdx.version}</version>
-		</dependency>
+		</dependency-->
 	</dependencies>
 </project>

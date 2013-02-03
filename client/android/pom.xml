@@ -24,20 +24,20 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>libgdx</groupId>
+			<groupId>com.badlogic.gdx</groupId>
 			<artifactId>gdx</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>libgdx</groupId>
+			<groupId>com.badlogic.gdx</groupId>
 			<artifactId>gdx-backend-android</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>libgdx</groupId>
 			<artifactId>gdx-natives</artifactId>
 			<version>${libgdx.version}</version>
-		</dependency>
+		</dependency-->
 	</dependencies>
 
 	<build>
@@ -47,7 +47,7 @@
 				<plugin>
 					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>3.4.0</version>
+					<version>3.5.0</version>
 					<extensions>true</extensions>
 				</plugin>
 			</plugins>

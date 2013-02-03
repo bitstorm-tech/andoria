@@ -2,7 +2,10 @@ package net.joesoft.andoria.gfx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
+import net.joesoft.andoria.input.KeyboardProcessor;
+import net.joesoft.andoria.input.MouseProcessor;
 import net.joesoft.andoria.utils.*;
 
 import java.util.List;
@@ -13,6 +16,8 @@ public class RenderEngine {
 	private final StopWatch stopWatchRenderTime = new StopWatch();
 	private final Terrain terrain = new Terrain();
 	private final CoordinateSystem coordinateSystem = new CoordinateSystem();
+	private final MouseProcessor mouseProcessor = new MouseProcessor();
+	private final KeyboardProcessor keyboardProcessor = new KeyboardProcessor();
 	public static final GameCamera camera = new GameCamera();
 	private final Ligth light = new Ligth();
 	private final Player player = new Player();
@@ -21,6 +26,11 @@ public class RenderEngine {
 	private long renderTime = 1;
 
 	public RenderEngine() {
+		final InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(keyboardProcessor);
+		multiplexer.addProcessor(mouseProcessor);
+		Gdx.input.setInputProcessor(multiplexer);
+
 		Gdx.graphics.setVSync(false);
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL10.GL_BACK);
@@ -38,7 +48,7 @@ public class RenderEngine {
 		clearScreen();
 		switchPolygonMode();
 
-		if(Context.showCoordinateSystem) {
+		if(Settings.isShowCoordinateSystem()) {
 			coordinateSystem.render();
 		}
 
@@ -78,7 +88,7 @@ public class RenderEngine {
 	}
 
 	private void switchPolygonMode() {
-		if(Context.wireframe) {
+		if(Settings.isWireframe()) {
 			Gdx.gl10.glPolygonMode(GL10.GL_FRONT, GL10.GL_LINE);
 			Gdx.gl10.glPolygonMode(GL10.GL_BACK, GL10.GL_LINE);
 		} else {
@@ -88,12 +98,13 @@ public class RenderEngine {
 	}
 
 	private void moveCamera() {
-		final List<Integer> pressedButtons = Context.mouseProcessor.pressedButtons();
-		final int scrolled = Context.mouseProcessor.getScrolled();
-		final float deltaX = Gdx.input.getDeltaX() * Context.mouseSpeed;
-		final float deltaY = Gdx.input.getDeltaY() * Context.mouseSpeed;
+		final List<Integer> pressedButtons = mouseProcessor.pressedButtons();
+		final int scrolled = mouseProcessor.getScrolled();
+		final float mouseSpeed = Settings.getMouseSpeed();
+		final float deltaX = Gdx.input.getDeltaX() * mouseSpeed;
+		final float deltaY = Gdx.input.getDeltaY() * mouseSpeed;
 
-		if(Context.cameraMode == CameraMode.DETACHED) {
+		if(Settings.getCameraMode() == CameraMode.DETACHED) {
 			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
 				camera.rotate(deltaX, deltaY);
 			}
@@ -112,7 +123,7 @@ public class RenderEngine {
 	}
 
 	private void movePlayer(long renderTime) {
-		final List<Integer> pressedKeys = Context.keyboardProcessor.pressedKeys();
+		final List<Integer> pressedKeys = keyboardProcessor.pressedKeys();
 		float speed = player.getSpeed();
 		boolean movePlayer = false;
 		float x = 0;
@@ -144,7 +155,7 @@ public class RenderEngine {
 			final float newHeight = terrain.getHeight(player.getPosition().x, player.getPosition().y);
 			player.getPosition().z = newHeight;
 
-			if(Context.cameraMode == CameraMode.ATTACHED) {
+			if(Settings.getCameraMode() == CameraMode.ATTACHED) {
 				camera.lookAt(player.getPosition());
 				camera.move(x, y, newHeight - oldHeight);
 			}
