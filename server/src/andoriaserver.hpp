@@ -9,33 +9,49 @@
 #ifndef ANDORIASERVER_HPP_
 #define ANDORIASERVER_HPP_
 
-class Configuration;
-namespace server
+
+namespace boost
 {
-	class Server;
+  namespace asio
+  {
+    class io_service;
+  };
 };
 
-/**
- * main program class. contains the main loop.
- */
-class AndoriaServer
+namespace andoria
 {
-	public:
-		AndoriaServer();
-		~AndoriaServer();
+  class Configuration;
+  namespace net
+  {
+    class Server;
+  };
 
-		int Exec();
 
-		void Exit();
-		void Exit(int param);
+  /**
+   * main program class. contains the main loop.
+   */
+  class AndoriaServer
+  {
+    public:
+      AndoriaServer();
+      ~AndoriaServer();
 
-	protected:
-		Configuration* m_PCfg;
-		bool m_Loop;
-		int m_Exit;
+      int Exec();
 
-		// network
-		server::Server* m_PServer;
+      void Exit();
+      void Exit(int param);
+
+    protected:
+      Configuration* m_PCfg;
+      bool m_Loop;
+      int m_Exit;
+
+      // network server
+      boost::asio::io_service* m_io_service;
+
+      // network
+      andoria::net::Server* m_PServer;
+  };
 };
 
 #endif /* ANDORIASERVER_HPP_ */

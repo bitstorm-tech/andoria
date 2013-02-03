@@ -8,21 +8,30 @@
 #ifndef CONFIGURATION_HPP_
 #define CONFIGURATION_HPP_
 
- /**
-  * singleton configuration class.
-  */
-class Configuration
+namespace andoria
 {
-	public:
-		~Configuration();
-		static Configuration* GetInstance();
 
-		void Init();
-		void Delete();
+   /**
+    * singleton configuration class.
+    */
+  class Configuration
+  {
+    public:
+      ~Configuration();
+      static Configuration* GetInstance();
 
-	protected:
-		Configuration();
-		static Configuration* m_PCfg;
+      void Init();
+      void Delete();
+
+      //*********************************************************
+      //* network
+      //*********************************************************
+      int GetNetworkPort() {return 1000;}
+      //std::string GetNetworkIP(){ return "127.0.0.1";}
+
+    protected:
+      Configuration();
+      static Configuration* m_PCfg;
+  };
 };
-
 #endif /* CONFIGURATION_HPP_ */

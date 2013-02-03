@@ -5,9 +5,26 @@
  * @version 1.0
  * @brief 6. November 2012
  */
-#include "server.hpp"
+#include <iostream>
+
 #include "andoriaserver.hpp"
 #include "configuration.hpp"
+
+using namespace std;
+using namespace andoria;
+
+void PrintMessage()
+{
+  cout << "*****************************************************" << endl;
+  cout << "Andoria Server" << endl;
+  cout << "2012" << endl;
+  cout << "by" << endl;
+  cout << "Josef Bauer" << endl;
+  cout << "Sandro Guldner" << endl;
+}
+
+void PrintError()
+{}
 
 /**
  * starts the andoria server.
@@ -16,14 +33,15 @@
  */
 int main(int length, char** data)
 {
-	// create configuration
-	Configuration* pCfg = Configuration::GetInstance();
-	pCfg->Init();
-	// create server
-	AndoriaServer server;
-	int result = server.Exec();
-	pCfg->Delete();
-	return result;
+  PrintMessage();
+  // create configuration
+  Configuration* pCfg = Configuration::GetInstance();
+  pCfg->Init();
+  // create server
+  AndoriaServer server;
+  int result = server.Exec();
+  pCfg->Delete();
+  return result;
 }
 
 
