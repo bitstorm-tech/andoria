@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.joesoft.andoria.utils.Settings;
-import net.joesoft.andoria.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Text {
-	private final Log log = new Log(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final BitmapFont font;
 	private final SpriteBatch spriteBatch = new SpriteBatch();
 	private final Camera cam;

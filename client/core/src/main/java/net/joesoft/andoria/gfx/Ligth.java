@@ -7,12 +7,13 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import net.joesoft.andoria.model.MoveableObject;
-import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.MeshGenerator;
 import net.joesoft.andoria.utils.VertexBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Ligth extends MoveableObject {
-	private Log LOG = new Log(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final Mesh mesh;
 
 	public Ligth() {

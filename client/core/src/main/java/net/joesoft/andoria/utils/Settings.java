@@ -2,22 +2,24 @@ package net.joesoft.andoria.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.sun.prism.impl.packrect.LevelSet;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Settings {
     private static final HashMap<String, String> properties = new LinkedHashMap<String, String>();
 	private static boolean loaded = false;
 	private static final String COMMENT = "_COMMENT";
 	private static final String EMPTY_LINE = "_EMPTY_LINE";
+	private static final File configFile = new File("./settings.properties");
 
 	private static final String ENGINE_RESOLUTION_X =           "engine.resolution.x";
 	private static final String ENGINE_RESOLUTION_Y =           "engine.resolution.y";
@@ -37,24 +39,23 @@ public class Settings {
 			return;
 		}
 
-		final File dest = new File("./settings.properties");
-
 		// copy settings.properties from the jar to the root directory
 		try {
-			if(!dest.exists()) {
+			if(!configFile.exists()) {
 				final FileHandle handle = Gdx.files.classpath("settings.properties");
 				if(!handle.exists()) {
 					throw new IOException("Can't find settings.properties in jar file");
 				}
-				handle.copyTo(new FileHandle(dest));
+				handle.copyTo(new FileHandle(configFile));
 			}
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
 
+		// copy content from file to map
 		FileInputStream in = null;
 		try {
-			in = new FileInputStream(dest);
+			in = new FileInputStream(configFile);
 			final List<String> lines = IOUtils.readLines(in);
 
 			for(String line : lines) {
@@ -79,8 +80,34 @@ public class Settings {
 	}
 
     private static void save() {
+		final StringBuilder builder = new StringBuilder();
 
-    }
+		for(Map.Entry<String, String> entry : properties.entrySet()) {
+			final String key = entry.getKey();
+			if(key.startsWith(COMMENT)) {
+				builder.append(entry.getValue()).append("\n");
+			} else if(key.startsWith(EMPTY_LINE)) {
+				builder.append("\n");
+			} else {
+				builder.append(key);
+				builder.append(" = ");
+				builder.append(entry.getValue()).append("\n");
+			}
+		}
+
+		FileOutputStream out = null;
+
+		try {
+			out = new FileOutputStream(configFile);
+			IOUtils.write(builder.toString(), out);
+		} catch (FileNotFoundException e) {
+			// TODO proper exception handling
+		} catch (IOException e) {
+			// TODO proper exception handling
+		} finally {
+			IOUtils.closeQuietly(out);
+		}
+	}
 
 	public static int getResolutionX() {
 		load();
@@ -89,6 +116,7 @@ public class Settings {
 
 	public static void setResolutionX(int resolutionX) {
 		properties.put(ENGINE_RESOLUTION_X, Integer.toString(resolutionX));
+		save();
 	}
 
 	public static int getResolutionY() {
@@ -98,15 +126,7 @@ public class Settings {
 
 	public static void setResolutionY(int resolutionY) {
 		properties.put(ENGINE_RESOLUTION_Y, Integer.toString(resolutionY));
-	}
-
-	public static int getLogLevel() {
-		load();
-		return LogLevel.translate(properties.get(ENGINE_LOG_LEVEL));
-	}
-
-	public static void setLogLevel(int logLevel) {
-		properties.put(ENGINE_LOG_LEVEL, LogLevel.translate(logLevel));
+		save();
 	}
 
 	public static float getScrollSpeed() {
@@ -116,6 +136,7 @@ public class Settings {
 
 	public static void setScrollSpeed(float scrollSpeed) {
 		properties.put(INPUT_SCROLL_SPEED, Float.toString(scrollSpeed));
+		save();
 	}
 
 	public static float getMouseSpeed() {
@@ -125,6 +146,7 @@ public class Settings {
 
 	public static void setMouseSpeed(float mouseSpeed) {
 		properties.put(INPUT_MOUSE_SPEED, Float.toString(mouseSpeed));
+		save();
 	}
 
 	public static boolean isLight() {
@@ -134,6 +156,7 @@ public class Settings {
 
 	public static void setLight(boolean light) {
 		properties.put(ENGINE_LIGHT, Boolean.toString(light));
+		save();
 	}
 
 	public static boolean isWireframe() {
@@ -143,6 +166,7 @@ public class Settings {
 
 	public static void setWireframe(boolean wireframe) {
 		properties.put(ENGINE_WIREFRAME, Boolean.toString(wireframe));
+		save();
 	}
 
 	public static boolean isShowCoordinateSystem() {
@@ -152,6 +176,7 @@ public class Settings {
 
 	public static void setShowCoordinateSystem(boolean showCoordinateSystem) {
 		properties.put(ENGINE_SHOW_COORDINATE_SYSTEM, Boolean.toString(showCoordinateSystem));
+		save();
 	}
 
 	public static boolean isShowNormals() {
@@ -161,6 +186,7 @@ public class Settings {
 
 	public static void setShowNormals(boolean showNormals) {
 		properties.put(ENGINE_SHOW_NORMALS, Boolean.toString(showNormals));
+		save();
 	}
 
 	public static CameraMode getCameraMode() {
@@ -170,6 +196,7 @@ public class Settings {
 
 	public static void setCameraMode(CameraMode cameraMode) {
 		properties.put(ENGINE_CAMERA_MODE, cameraMode.name());
+		save();
 	}
 
 	public static TargetPlatform getTargetPlatform() {
@@ -179,5 +206,6 @@ public class Settings {
 
 	public static void setTargetPlatfrom(TargetPlatform targetPlatfrom) {
 		properties.put(ENGINE_TARGET_PATFORM, targetPlatfrom.name());
+		save();
 	}
 }

@@ -8,9 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.math.Vector3;
-import net.joesoft.andoria.utils.Log;
 import net.joesoft.andoria.utils.Math3D;
 import net.joesoft.andoria.utils.VertexBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Terrain {
-	private final Log LOG = new Log(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private Mesh mesh;
 	private Texture texture;
 	private final int sizeX = 50;
@@ -52,9 +53,9 @@ public class Terrain {
 		final int numTextureCoords = sizeX * sizeY * 6 * 2;
 		final int numNormalsCoords = sizeX * sizeY * 6 * 3;
 
-		LOG.info("Vertex Coords:  " + numVertexCoords);
-		LOG.info("Normal Coords:  " + numNormalsCoords);
-		LOG.info("Texture Coords: " + numTextureCoords);
+		log.info("Vertex Coords:  " + numVertexCoords);
+		log.info("Normal Coords:  " + numNormalsCoords);
+		log.info("Texture Coords: " + numTextureCoords);
 
 		mesh = new Mesh(true, numVertexCoords + numTextureCoords + numNormalsCoords, 0, attributes);
 		final VertexBuffer buffer = new VertexBuffer(attributes);

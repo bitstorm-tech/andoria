@@ -2,10 +2,11 @@ package net.joesoft.andoria.model;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import net.joesoft.andoria.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract  class MoveableObject extends GameObject {
-	private final Log log = new Log(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	protected float speed;
 
 	public MoveableObject() {

@@ -11,6 +11,32 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>3.5.1</version>
+					<extensions>true</extensions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<!-- platform or api level (api level 4 = platform 1.6)-->
+						<platform>16</platform>
+					</sdk>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -33,36 +59,5 @@
 			<artifactId>gdx-backend-android</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
-		<!--dependency>
-			<groupId>libgdx</groupId>
-			<artifactId>gdx-natives</artifactId>
-			<version>${libgdx.version}</version>
-		</dependency-->
 	</dependencies>
-
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-					<artifactId>android-maven-plugin</artifactId>
-					<version>3.5.0</version>
-					<extensions>true</extensions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId>
-				<configuration>
-					<sdk>
-						<!-- platform or api level (api level 4 = platform 1.6)-->
-						<platform>16</platform>
-					</sdk>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

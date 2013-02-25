@@ -6,12 +6,18 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import net.joesoft.andoria.input.KeyboardProcessor;
 import net.joesoft.andoria.input.MouseProcessor;
-import net.joesoft.andoria.utils.*;
+import net.joesoft.andoria.utils.CameraMode;
+import net.joesoft.andoria.utils.CoordinateSystem;
+import net.joesoft.andoria.utils.GameCamera;
+import net.joesoft.andoria.utils.Settings;
+import net.joesoft.andoria.utils.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class RenderEngine {
-	private final Log log = new Log(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final StopWatch stopWatchFPS = new StopWatch();
 	private final StopWatch stopWatchRenderTime = new StopWatch();
 	private final Terrain terrain = new Terrain();

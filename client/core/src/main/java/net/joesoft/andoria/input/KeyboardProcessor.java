@@ -3,13 +3,14 @@ package net.joesoft.andoria.input;
 import com.badlogic.gdx.InputAdapter;
 import net.joesoft.andoria.utils.CameraMode;
 import net.joesoft.andoria.utils.Settings;
-import net.joesoft.andoria.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class KeyboardProcessor extends InputAdapter {
-	private static final Log log = new Log(KeyboardProcessor.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private List<Integer> pressedKeys = new ArrayList<Integer>(64);
 
 	@Override
