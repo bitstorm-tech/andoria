@@ -8,6 +8,9 @@ xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assemb
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>/</outputDirectory>
+			<outputFileNameMapping
+                    >${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+            </outputFileNameMapping>
 			<excludes>
 				<exclude>*android*</exclude>
 			</excludes>
