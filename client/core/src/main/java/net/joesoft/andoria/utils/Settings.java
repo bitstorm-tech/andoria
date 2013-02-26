@@ -1,20 +1,24 @@
 package net.joesoft.andoria.utils;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Settings {
+	private static final Logger log = LoggerFactory.getLogger(Settings.class);
     private static final HashMap<String, String> properties = new LinkedHashMap<String, String>();
 	private static boolean loaded = false;
 	private static final String COMMENT = "_COMMENT";
@@ -23,7 +27,6 @@ public class Settings {
 
 	private static final String ENGINE_RESOLUTION_X =           "engine.resolution.x";
 	private static final String ENGINE_RESOLUTION_Y =           "engine.resolution.y";
-	private static final String ENGINE_LOG_LEVEL =              "engine.log.level";
 	private static final String ENGINE_LIGHT =                  "engine.light";
 	private static final String ENGINE_WIREFRAME =              "engine.wireframe";
 	private static final String ENGINE_SHOW_COORDINATE_SYSTEM = "engine.showCoordinateSystem";
@@ -40,20 +43,26 @@ public class Settings {
 		}
 
 		// copy settings.properties from the jar to the root directory
+		InputStream in = null;
+		OutputStream out = null;
 		try {
 			if(!configFile.exists()) {
-				final FileHandle handle = Gdx.files.classpath("settings.properties");
-				if(!handle.exists()) {
-					throw new IOException("Can't find settings.properties in jar file");
+				final URL settingsUrl = ClassLoader.getSystemResource(configFile.getName());
+				if(settingsUrl == null) {
+					throw new RuntimeException("Can't find settings.properties in jar file");
 				}
-				handle.copyTo(new FileHandle(configFile));
+				in = settingsUrl.openStream();
+				out = new FileOutputStream(configFile);
+				IOUtils.copy(in, out);
 			}
 		} catch(IOException e) {
 			throw new RuntimeException(e);
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(out);
 		}
 
 		// copy content from file to map
-		FileInputStream in = null;
 		try {
 			in = new FileInputStream(configFile);
 			final List<String> lines = IOUtils.readLines(in);
@@ -101,9 +110,9 @@ public class Settings {
 			out = new FileOutputStream(configFile);
 			IOUtils.write(builder.toString(), out);
 		} catch (FileNotFoundException e) {
-			// TODO proper exception handling
+			log.error("Can't save settings", e);
 		} catch (IOException e) {
-			// TODO proper exception handling
+			log.error("Can't save settings", e);
 		} finally {
 			IOUtils.closeQuietly(out);
 		}

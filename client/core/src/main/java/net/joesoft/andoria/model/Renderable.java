@@ -1,4 +1,4 @@
-package net.joesoft.andoria.gfx;
+package net.joesoft.andoria.model;
 
 import net.joesoft.andoria.utils.VertexBuffer;
 

@@ -1,4 +1,4 @@
-package net.joesoft.andoria.gfx;
+package net.joesoft.andoria.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
