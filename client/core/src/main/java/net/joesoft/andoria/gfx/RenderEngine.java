@@ -6,11 +6,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import net.joesoft.andoria.input.KeyboardProcessor;
 import net.joesoft.andoria.input.MouseProcessor;
+import net.joesoft.andoria.model.Player;
 import net.joesoft.andoria.utils.CameraMode;
 import net.joesoft.andoria.utils.CoordinateSystem;
 import net.joesoft.andoria.utils.GameCamera;
 import net.joesoft.andoria.utils.Settings;
-import net.joesoft.andoria.utils.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,74 +18,73 @@ import java.util.List;
 
 public class RenderEngine {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private final StopWatch stopWatchFPS = new StopWatch();
-	private final StopWatch stopWatchRenderTime = new StopWatch();
 	private final Terrain terrain = new Terrain();
 	private final CoordinateSystem coordinateSystem = new CoordinateSystem();
 	private final MouseProcessor mouseProcessor = new MouseProcessor();
 	private final KeyboardProcessor keyboardProcessor = new KeyboardProcessor();
-	public static final GameCamera camera = new GameCamera();
+	private final GameCamera camera = new GameCamera();
 	private final Ligth light = new Ligth();
 	private final Player player = new Player();
-	private final float SECOND = 1000f;
-	private long frames = 0;
-	private long renderTime = 1;
+	private final Text text = new Text();
 
+	/**
+	 *
+	 */
 	public RenderEngine() {
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(keyboardProcessor);
 		multiplexer.addProcessor(mouseProcessor);
 		Gdx.input.setInputProcessor(multiplexer);
-
 		Gdx.graphics.setVSync(false);
-		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
-		Gdx.gl.glCullFace(GL10.GL_BACK);
 		light.rotate(90);
 	}
 
-	public void render() {
-		stopWatchFPS.start();
-		stopWatchRenderTime.start();
+	private void set3DOGLSettings() {
+		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
+		Gdx.gl.glCullFace(GL10.GL_BACK);
+	}
 
+	private void set2DOGLSettings() {
+		Gdx.gl.glDisable(GL10.GL_CULL_FACE);
+	}
+
+	/**
+	 *
+	 */
+	public void render() {
+		final float renderTime = Gdx.graphics.getRawDeltaTime();
+		final int fps = Gdx.graphics.getFramesPerSecond();
+
+		clearScreen();
 		moveCamera();
 		movePlayer(renderTime);
 		moveLight(renderTime);
-
-		clearScreen();
 		switchPolygonMode();
 
+
+		//===================== 3D stuff =====================
+		set3DOGLSettings();
 		if(Settings.isShowCoordinateSystem()) {
 			coordinateSystem.render();
 		}
 
 		light.render();
-
 		light.on();
 		terrain.render();
 		player.render();
 		light.off();
+		//====================================================
 
-		frames++;
 
-		if(stopWatchFPS.elapsedTime() >= SECOND) {
-			log.info("FPS: " + frames);
-			frames = 0;
-			stopWatchFPS.stop();
-		}
-
-		renderTime = stopWatchRenderTime.stop();
-
-		// Limit to max. 1000 FPS
-		if(renderTime == 0) {
-			renderTime = 1;
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
-		}
+		//===================== 2D stuff =====================
+		set2DOGLSettings();
+		text.write("FPS: " + fps, 5, Settings.getResolutionY() - 15);
+		//====================================================
 	}
 
+	/**
+	 *
+	 */
 	private void clearScreen() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
@@ -93,6 +92,9 @@ public class RenderEngine {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 	}
 
+	/**
+	 *
+	 */
 	private void switchPolygonMode() {
 		if(Settings.isWireframe()) {
 			Gdx.gl10.glPolygonMode(GL10.GL_FRONT, GL10.GL_LINE);
@@ -103,6 +105,9 @@ public class RenderEngine {
 		}
 	}
 
+	/**
+	 *
+	 */
 	private void moveCamera() {
 		final List<Integer> pressedButtons = mouseProcessor.pressedButtons();
 		final int scrolled = mouseProcessor.getScrolled();
@@ -128,7 +133,11 @@ public class RenderEngine {
 		camera.zoom(scrolled);
 	}
 
-	private void movePlayer(long renderTime) {
+	/**
+	 *
+	 * @param renderTime
+	 */
+	private void movePlayer(float renderTime) {
 		final List<Integer> pressedKeys = keyboardProcessor.pressedKeys();
 		float speed = player.getSpeed();
 		boolean movePlayer = false;
@@ -136,22 +145,22 @@ public class RenderEngine {
 		float y = 0;
 
 		if(pressedKeys.contains(Input.Keys.UP)) {
-			y += speed * (renderTime / SECOND);
+			y += speed * renderTime;
 			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.DOWN)) {
-			y -= speed * (renderTime / SECOND);
+			y -= speed * renderTime;
 			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.LEFT)) {
-			x += speed * (renderTime / SECOND);
+			x += speed * renderTime;
 			movePlayer = true;
 		}
 
 		if(pressedKeys.contains(Input.Keys.RIGHT)) {
-			x -= speed * (renderTime / SECOND);
+			x -= speed * renderTime;
 			movePlayer = true;
 		}
 
@@ -168,13 +177,17 @@ public class RenderEngine {
 		}
 	}
 
-	private void moveLight(long renderTime) {
+	/**
+	 *
+	 * @param renderTime
+	 */
+	private void moveLight(float renderTime) {
 		if(light.getPosition().x > 50) {
 			light.getPosition().set(0, 0, 3);
 		}
 
 		final float lightSpeed = light.getSpeed();
-		light.move(lightSpeed * (renderTime/SECOND), lightSpeed * (renderTime/SECOND), 0);
+		light.move(lightSpeed * renderTime, lightSpeed * renderTime, 0);
 		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
 	}
 }
