@@ -6,12 +6,12 @@ import net.joesoft.andoria.utils.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class KeyboardProcessor extends InputAdapter {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private List<Integer> pressedKeys = new ArrayList<Integer>(64);
+	private List<Integer> pressedKeys = new LinkedList<Integer>();
 
 	@Override
 	public boolean keyTyped(char c) {
@@ -55,11 +55,17 @@ public class KeyboardProcessor extends InputAdapter {
 		return true;
 	}
 
+	@Override
 	public boolean keyUp(int keycode) {
 		pressedKeys.remove(new Integer(keycode));
 		return true;
 	}
 
+	/**
+	 * This methods returns a list of all keys which are pressed when this method is called.
+	 *
+	 * @return a list of all currently pressed keys
+	 */
 	public List<Integer> pressedKeys() {
 		return pressedKeys;
 	}

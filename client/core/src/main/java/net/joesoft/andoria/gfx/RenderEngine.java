@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL10;
 import net.joesoft.andoria.input.KeyboardProcessor;
 import net.joesoft.andoria.input.MouseProcessor;
 import net.joesoft.andoria.model.Player;
+import net.joesoft.andoria.ui.SettingsMenu;
+import net.joesoft.andoria.ui.Text;
 import net.joesoft.andoria.utils.CameraMode;
 import net.joesoft.andoria.utils.CoordinateSystem;
 import net.joesoft.andoria.utils.GameCamera;
@@ -14,6 +16,7 @@ import net.joesoft.andoria.utils.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.PrivateKey;
 import java.util.List;
 
 public class RenderEngine {
@@ -26,6 +29,7 @@ public class RenderEngine {
 	private final Ligth light = new Ligth();
 	private final Player player = new Player();
 	private final Text text = new Text();
+	private final SettingsMenu settingsMenu = new SettingsMenu();
 
 	/**
 	 *
@@ -39,12 +43,12 @@ public class RenderEngine {
 		light.rotate(90);
 	}
 
-	private void set3DOGLSettings() {
+	private void set3dGlSettings() {
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL10.GL_BACK);
 	}
 
-	private void set2DOGLSettings() {
+	private void set2dGlSettings() {
 		Gdx.gl.glDisable(GL10.GL_CULL_FACE);
 	}
 
@@ -55,6 +59,7 @@ public class RenderEngine {
 		final float renderTime = Gdx.graphics.getRawDeltaTime();
 		final int fps = Gdx.graphics.getFramesPerSecond();
 
+		processInput();
 		clearScreen();
 		moveCamera();
 		movePlayer(renderTime);
@@ -63,7 +68,7 @@ public class RenderEngine {
 
 
 		//===================== 3D stuff =====================
-		set3DOGLSettings();
+		set3dGlSettings();
 		if(Settings.isShowCoordinateSystem()) {
 			coordinateSystem.render();
 		}
@@ -77,8 +82,9 @@ public class RenderEngine {
 
 
 		//===================== 2D stuff =====================
-		set2DOGLSettings();
+		set2dGlSettings();
 		text.write("FPS: " + fps, 5, Settings.getResolutionY() - 15);
+		settingsMenu.show();
 		//====================================================
 	}
 
@@ -189,5 +195,13 @@ public class RenderEngine {
 		final float lightSpeed = light.getSpeed();
 		light.move(lightSpeed * renderTime, lightSpeed * renderTime, 0);
 		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
+	}
+
+	private void processInput() {
+		final List<Integer> pressedKeys = keyboardProcessor.pressedKeys();
+
+		if(pressedKeys.contains(Input.Keys.ESCAPE)) {
+			settingsMenu.setVisibility(!settingsMenu.getVisibility());
+		}
 	}
 }
