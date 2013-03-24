@@ -16,7 +16,6 @@ import net.joesoft.andoria.utils.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.PrivateKey;
 import java.util.List;
 
 public class RenderEngine {
@@ -36,6 +35,7 @@ public class RenderEngine {
 	 */
 	public RenderEngine() {
 		final InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(settingsMenu.getInputAdapter());
 		multiplexer.addProcessor(keyboardProcessor);
 		multiplexer.addProcessor(mouseProcessor);
 		Gdx.input.setInputProcessor(multiplexer);
@@ -84,7 +84,7 @@ public class RenderEngine {
 		//===================== 2D stuff =====================
 		set2dGlSettings();
 		text.write("FPS: " + fps, 5, Settings.getResolutionY() - 15);
-		settingsMenu.show();
+		settingsMenu.render();
 		//====================================================
 	}
 
@@ -131,7 +131,7 @@ public class RenderEngine {
 			}
 		} else {
 			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
-				camera.rotate(deltaX, deltaY, player.getPosition());
+				camera.rotate(deltaX, deltaY);
 				player.rotate(deltaX);
 			}
 		}
@@ -144,28 +144,27 @@ public class RenderEngine {
 	 * @param renderTime
 	 */
 	private void movePlayer(float renderTime) {
-		final List<Integer> pressedKeys = keyboardProcessor.pressedKeys();
 		float speed = player.getSpeed();
 		boolean movePlayer = false;
 		float x = 0;
 		float y = 0;
 
-		if(pressedKeys.contains(Input.Keys.UP)) {
+		if(keyboardProcessor.isKeyPressed(Input.Keys.UP)) {
 			y += speed * renderTime;
 			movePlayer = true;
 		}
 
-		if(pressedKeys.contains(Input.Keys.DOWN)) {
+		if(keyboardProcessor.isKeyPressed(Input.Keys.DOWN)) {
 			y -= speed * renderTime;
 			movePlayer = true;
 		}
 
-		if(pressedKeys.contains(Input.Keys.LEFT)) {
+		if(keyboardProcessor.isKeyPressed(Input.Keys.LEFT)) {
 			x += speed * renderTime;
 			movePlayer = true;
 		}
 
-		if(pressedKeys.contains(Input.Keys.RIGHT)) {
+		if(keyboardProcessor.isKeyPressed(Input.Keys.RIGHT)) {
 			x -= speed * renderTime;
 			movePlayer = true;
 		}
@@ -198,9 +197,7 @@ public class RenderEngine {
 	}
 
 	private void processInput() {
-		final List<Integer> pressedKeys = keyboardProcessor.pressedKeys();
-
-		if(pressedKeys.contains(Input.Keys.ESCAPE)) {
+		if(keyboardProcessor.wasKeyReleased(Input.Keys.ESCAPE)) {
 			settingsMenu.setVisibility(!settingsMenu.getVisibility());
 		}
 	}

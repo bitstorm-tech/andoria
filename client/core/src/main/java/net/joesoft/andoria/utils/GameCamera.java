@@ -22,37 +22,21 @@ public class GameCamera {
 	}
 
 	/**
-	 * Rotates the camera around itself.
+	 * Rotates the camera.
 	 *
 	 * @param deltaX the 2D change on the x axis
 	 * @param deltaY the 2D change on the y axis
 	 */
 	public void rotate(float deltaX, float deltaY) {
-		rotate(deltaX, deltaY, camera.position);
-	}
-
-	/**
-	 * Rotates the camera around the given object position.
-	 *
-	 * @param deltaX the 2D change on the x axis
-	 * @param deltaY the 2D change on the y axis
-	 * @param objectPosition the object position where the camera shall rotate around
-	 */
-	public void rotate(float deltaX, float deltaY, Vector3 objectPosition) {
 		degree += deltaX;
-
-		camera.position.set(objectPosition);
 
 		// the deltaX is always the rotation around the z axis
 		camera.rotate(-deltaX, 0, 0, 1);
 
-		// the deltaY is the rotation around the x and y axis
-		// depending of the direction
+		// the deltaY is the rotation around the x and y axis depending of the direction
 		final float x = MathUtils.cosDeg(degree);
 		final float y = MathUtils.sinDeg(degree);
 		camera.rotate(-deltaY, x, -y, 0);
-
-		camera.translate(camera.direction.cpy().mul(-zoom));
 
 		update();
 	}

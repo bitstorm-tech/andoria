@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
-import net.joesoft.andoria.model.MoveableObject;
 import net.joesoft.andoria.utils.MeshGenerator;
 import net.joesoft.andoria.utils.VertexBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Player extends MoveableObject {
+	private static final Logger log = LoggerFactory.getLogger(Player.class);
 	private final Texture texture;
 	private final Mesh mesh;
 

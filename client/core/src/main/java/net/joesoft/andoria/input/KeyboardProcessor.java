@@ -1,8 +1,6 @@
 package net.joesoft.andoria.input;
 
 import com.badlogic.gdx.InputAdapter;
-import net.joesoft.andoria.utils.CameraMode;
-import net.joesoft.andoria.utils.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,42 +10,7 @@ import java.util.List;
 public class KeyboardProcessor extends InputAdapter {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private List<Integer> pressedKeys = new LinkedList<Integer>();
-
-	@Override
-	public boolean keyTyped(char c) {
-		if(c == 'l') {
-			log.debug("key L typed");
-			Settings.setLight(!Settings.isLight());
-
-			if(Settings.isLight()) {
-				log.info("light on");
-			} else {
-				log.info("light off");
-			}
-		}
-
-		if(c == 'w') {
-			Settings.setWireframe(!Settings.isWireframe());
-		}
-
-		if(c == 'c') {
-			Settings.setShowCoordinateSystem(!Settings.isShowCoordinateSystem());
-		}
-
-		if(c == 'n') {
-			Settings.setShowNormals(!Settings.isShowNormals());
-		}
-
-		if(c == 'm') {
-			if(Settings.getCameraMode() == CameraMode.ATTACHED) {
-				Settings.setCameraMode(CameraMode.DETACHED);
-			} else {
-				Settings.setCameraMode(CameraMode.ATTACHED);
-			}
-		}
-
-		return true;
-	}
+	private List<Integer> releasedKeys = new LinkedList<Integer>();
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -57,16 +20,26 @@ public class KeyboardProcessor extends InputAdapter {
 
 	@Override
 	public boolean keyUp(int keycode) {
+		releasedKeys.add(keycode);
 		pressedKeys.remove(new Integer(keycode));
 		return true;
 	}
 
 	/**
-	 * This methods returns a list of all keys which are pressed when this method is called.
 	 *
-	 * @return a list of all currently pressed keys
+	 * @param keycode
+	 * @return
 	 */
-	public List<Integer> pressedKeys() {
-		return pressedKeys;
+	public boolean isKeyPressed(int keycode) {
+		return pressedKeys.contains(new Integer(keycode));
+	}
+
+	/**
+	 *
+	 * @param keycode
+	 * @return
+	 */
+	public boolean wasKeyReleased(int keycode) {
+		return releasedKeys.remove(new Integer(keycode));
 	}
 }

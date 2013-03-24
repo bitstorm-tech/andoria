@@ -18,6 +18,11 @@
 			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.badlogic.gdx</groupId>
+			<artifactId>gdx-tools</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>1.6_r2</version>

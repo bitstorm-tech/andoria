@@ -1,0 +1,13 @@
+{
+	com.badlogic.gdx.graphics.g2d.BitmapFont: {
+		default: { file: ui/fonts/andoria-font.fnt }
+	},
+
+	com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+		default: { checkboxOn: checkbox-checked, checkboxOff: checkbox-unchecked, font: default }
+	},
+
+	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+		default: { titleFont: default, background: settings-menu-background }
+	}
+}
