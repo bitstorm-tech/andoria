@@ -30,7 +30,7 @@
 				<configuration>
 					<sdk>
 						<!-- platform or api level (api level 4 = platform 1.6)-->
-						<platform>16</platform>
+						<platform>10</platform>
 					</sdk>
 				</configuration>
 			</plugin>
@@ -42,12 +42,12 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andoria-client-core</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android</artifactId>
-			<version>1.6_r2</version>
-			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.badlogic.gdx</groupId>
+					<artifactId>gdx-tools</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.badlogic.gdx</groupId>

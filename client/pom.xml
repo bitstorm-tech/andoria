@@ -9,11 +9,22 @@
 
 	<properties>
 		<libgdx.version>0.9.9-SNAPSHOT</libgdx.version>
+		<android.version>2.3.3</android.version>
 	</properties>
 	
 	<modules>
 		<module>core</module>
-		<module>android</module>
+		<!--module>android</module-->
 		<module>win</module>
 	</modules>
+	
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>${android.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

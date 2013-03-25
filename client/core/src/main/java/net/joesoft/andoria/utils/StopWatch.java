@@ -12,7 +12,7 @@ public class StopWatch {
      */
 	public void start() {
 		if(!running) {
-			if (Settings.getTargetPlatform() == TargetPlatform.ANDROID) {
+			if (Settings.getString(Settings.Key.ENGINE_TARGETPLATFORM).equalsIgnoreCase(TargetPlatform.ANDROID.name())) {
 				startTime = SystemClock.elapsedRealtime();
 			} else {
 				startTime = System.currentTimeMillis();
@@ -29,7 +29,7 @@ public class StopWatch {
 	 * @return elapsed time in milliseconds
 	 */
 	public long elapsedTime() {
-		if (Settings.getTargetPlatform() == TargetPlatform.ANDROID) {
+		if (Settings.getString(Settings.Key.ENGINE_TARGETPLATFORM).equalsIgnoreCase(TargetPlatform.ANDROID.name())) {
 			return SystemClock.elapsedRealtime() - startTime;
 		} else {
 			return System.currentTimeMillis() - startTime;
