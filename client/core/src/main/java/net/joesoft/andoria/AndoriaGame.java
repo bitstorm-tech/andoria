@@ -13,5 +13,4 @@ public class AndoriaGame extends Game {
 		log.info("Andoria started");
 		setScreen(new GameScreen());
 	}
-
 }

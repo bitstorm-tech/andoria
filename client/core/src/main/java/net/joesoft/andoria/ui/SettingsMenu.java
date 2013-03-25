@@ -12,18 +12,19 @@ public class SettingsMenu extends Window {
 	public SettingsMenu() {
 		super("Settings Menu", Resources.getSkin());
 
-		addCheckBox("Light", Settings.Key.ENGINE_LIGHT);
+		addCheckBox(" Light", Settings.Key.ENGINE_LIGHT).space(5);
 		row();
-		addCheckBox("Wireframe Mode", Settings.Key.ENGINE_WIREFRAME);
+		addCheckBox(" Wireframe Mode", Settings.Key.ENGINE_WIREFRAME).space(5);
 		row();
-		addCheckBox("Show Normals", Settings.Key.ENGINE_SHOWNORMALS);
+		addCheckBox(" Show Normals", Settings.Key.ENGINE_SHOWNORMALS).space(5);
 		row();
-		addCheckBox("Show Coordinate System", Settings.Key.ENGINE_SHOWCOORDINATESYSTEM);
+		addCheckBox(" Show Coordinate System", Settings.Key.ENGINE_SHOWCOORDINATESYSTEM).space(5);
 		row();
-		addCheckBox("Show FPS", Settings.Key.UI_SHOWFPS);
+		addCheckBox(" Show FPS", Settings.Key.UI_SHOWFPS).space(5);
 
 		padTop(30);
-		size(200, 400);
+		setHeight(512);
+		setWidth(512);
 		setVisible(false);
 	}
 

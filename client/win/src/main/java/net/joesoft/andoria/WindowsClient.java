@@ -14,7 +14,8 @@ public class WindowsClient {
 			config.title = "Andoria [developer preview]";
 			config.width = Settings.getInteger(Settings.Key.ENGINE_RESOLUTION_X);
 			config.height = Settings.getInteger(Settings.Key.ENGINE_RESOLUTION_Y);
-	//		config.fullscreen = true;
+			config.resizable = false;
+			config.fullscreen = Settings.getBoolean(Settings.Key.ENGINE_FULLSCREEN);
 			new LwjglApplication(new AndoriaGame(), config);
 		} catch(Throwable t) {
 			log.error("Error while running Andoria", t);
