@@ -50,7 +50,7 @@ public class Settings {
 		}
 
 		// copy settings.properties from the jar to the root directory
-		Resources.copyFromJarToFS("settings.properties", "settings.properties", false);
+		Resources.copyFromJarToFS("settings.properties", false);
 
 		// copy content from file to map
 		InputStream in = null;

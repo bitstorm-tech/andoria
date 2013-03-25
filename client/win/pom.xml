@@ -45,6 +45,9 @@
 							<Main-Class>net.joesoft.andoria.WindowsClient</Main-Class>
 						</manifest>
 					</archive>
+					<excludes>
+						<exclude>*.cmd</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>

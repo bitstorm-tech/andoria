@@ -5,13 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
 import net.joesoft.andoria.utils.Constants;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.InputStream;
 
 public class Resources {
+	private static final Logger log = LoggerFactory.getLogger(Resources.class);
 	private static boolean atlasGenerated = false;
 	private static boolean skinCreated = false;
 	private static TextureAtlas atlas;
@@ -28,7 +30,9 @@ public class Resources {
 	}
 
 	private static TextureAtlas generateTextureAtlas() {
-		copyFromJarToFS("ui", "ui", false);
+		copyFromJarToFS("ui/checkbox-checked.png", false);
+		copyFromJarToFS("ui/checkbox-unchecked.png", false);
+		copyFromJarToFS("ui/settings-menu-background.png", false);
 
 		if(atlasGenerated) {
 			return atlas;
@@ -46,32 +50,24 @@ public class Resources {
 	/**
 	 * Copies resources (files or folders) from a jar file to the filesystem.
 	 *
-	 * @param src the source file or directory inside the jar file
-	 * @param dest the destination file or directory
-	 * @param overwrite if false content will only be extracted if it doesn't exists already in the FS;
-	 *                  if true content will be extracted always
+	 * @param fileName the name of the file which shall be copied
+	 * @param overwrite if false file will only be extracted if it doesn't exists already in the FS;
+	 *                  if true file will be extracted always and overwrited any already existing one
 	 */
-	public static void copyFromJarToFS(String src, String dest, boolean overwrite) {
-		final File destFile = new File(dest);
+	public static void copyFromJarToFS(String fileName, boolean overwrite) {
+		final File file = new File(fileName);
+		InputStream in;
 
 		try {
-			if(!destFile.exists() || overwrite) {
-				final URL resourceURL = ClassLoader.getSystemResource(src);
-				if(resourceURL == null) {
-					throw new RuntimeException("Can't find settings.properties in jar file");
+			if(!file.exists() || overwrite) {
+				in = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
+				if(in == null) {
+					throw new RuntimeException("Can't find " + file + " in jar file");
 				}
 
-				final File srcFile = new File(resourceURL.toURI());
-
-				if(srcFile.isFile()) {
-					FileUtils.copyFile(srcFile, destFile);
-				} else {
-					FileUtils.copyDirectory(srcFile, destFile);
-				}
+				FileUtils.copyInputStreamToFile(in, file);
 			}
 		} catch(IOException e) {
-			throw new RuntimeException(e);
-		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 	}
