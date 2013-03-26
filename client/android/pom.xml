@@ -4,6 +4,7 @@
 	<artifactId>andoria-client-android</artifactId>
 	<packaging>apk</packaging>
 	<name>Andoria Client for Android</name>
+	<description>The Android binding for the Andoria client</description>
 	
 	<parent>
 		<groupId>net.joesoft.andoria</groupId>

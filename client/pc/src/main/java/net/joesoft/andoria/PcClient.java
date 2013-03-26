@@ -6,8 +6,8 @@ import net.joesoft.andoria.utils.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WindowsClient {
-	private static Logger log = LoggerFactory.getLogger(WindowsClient.class);
+public class PcClient {
+	private static Logger log = LoggerFactory.getLogger(PcClient.class);
 	public static void main(String[] args) {
 		try {
 			final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

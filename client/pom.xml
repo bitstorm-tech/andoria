@@ -6,6 +6,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Andoria Client</name>
+	<description>A Java based client application for Andoria</description>
 
 	<properties>
 		<libgdx.version>0.9.9-SNAPSHOT</libgdx.version>
@@ -15,7 +16,7 @@
 	<modules>
 		<module>core</module>
 		<!--module>android</module-->
-		<module>win</module>
+		<module>pc</module>
 	</modules>
 	
 	

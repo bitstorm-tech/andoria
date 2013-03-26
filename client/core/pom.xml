@@ -3,7 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>andoria-client-core</artifactId>
 	<packaging>jar</packaging>
-	<name>Andoria Client Core</name>
+	<name>Andoria Client Core</name>	
+	<description>The core library of the client application for Andoria</description>
 	
 	<parent>
 		<groupId>net.joesoft.andoria</groupId>
