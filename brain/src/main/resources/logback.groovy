@@ -13,7 +13,7 @@ appender("CONSOLE_APPENDER", ConsoleAppender) {
 }
 
 appender("FILE_APPENDER", FileAppender) {
-	file = "client-log.txt"
+	file = "brain-log.txt"
 	append = false
 	encoder(PatternLayoutEncoder) {
 		pattern = logPattern
