@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
+import net.joesoft.andoria.brain.ObjectType;
 import net.joesoft.andoria.client.utils.MeshGenerator;
 import net.joesoft.andoria.client.utils.VertexBuffer;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ public class Player extends GameObject implements Renderable {
 	private final Mesh mesh;
 
 	public Player() {
+		super(ObjectType.PLAYER);
 		speed = 2f;
 		final VertexAttributes attributes = new VertexAttributes(
 			new VertexAttribute(VertexAttributes.Usage.Position, 3, null),

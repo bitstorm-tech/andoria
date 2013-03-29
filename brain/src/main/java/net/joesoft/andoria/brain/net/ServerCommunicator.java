@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ClientCommunicator extends Communicator {
-	private static final Logger log = LoggerFactory.getLogger(ClientCommunicator.class);
+/**
+ * This class serves as the a communication stub to the Andoria server.
+ */
+public class ServerCommunicator extends Communicator {
+	private static final Logger log = LoggerFactory.getLogger(ServerCommunicator.class);
 
 	/**
 	 * Creates a connection for the user with the given id. If the user has already a connection
@@ -20,9 +23,7 @@ public class ClientCommunicator extends Communicator {
 		Socket socket;
 
 		try {
-			log.debug("Before new Socket()");
 			socket = new Socket("localhost", 14488);
-			log.debug("After new Socket()");
 		} catch (IOException e) {
 			log.error("Can't connect to brain", e);
 			return false;

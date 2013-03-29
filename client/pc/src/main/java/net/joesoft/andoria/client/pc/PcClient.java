@@ -20,6 +20,7 @@ public class PcClient {
 			new LwjglApplication(new AndoriaGame(), config);
 		} catch(Throwable t) {
 			log.error("Error while running Andoria", t);
+			System.exit(5);
 		} finally {
 			log.info("Andoria stopped");
 		}

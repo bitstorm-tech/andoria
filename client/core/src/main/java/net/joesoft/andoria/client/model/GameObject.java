@@ -1,16 +1,23 @@
 package net.joesoft.andoria.client.model;
 
 import com.badlogic.gdx.math.Vector3;
+import net.joesoft.andoria.brain.ObjectType;
 
 public abstract class GameObject {
+	public final ObjectType type;
 	public float x, y, z;
 	public float lookX, lookY, lookZ;
 	public float speed;
 
-	public GameObject() {
+	public GameObject(ObjectType type) {
+		this.type = type;
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
 	}
 
-	public GameObject(float x, float y, float z) {
+	public GameObject(ObjectType type, float x, float y, float z) {
+		this.type = type;
 		this.x = x;
 		this.y = y;
 		this.z = z;

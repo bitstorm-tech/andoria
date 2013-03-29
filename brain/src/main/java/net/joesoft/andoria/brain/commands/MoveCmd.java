@@ -11,6 +11,9 @@ public class MoveCmd extends Command {
 	/** speed */
 	public float speed;
 
+	/** userId to check if the user is allowed to do this move command */
+	public int userId;
+
 	public MoveCmd(int id) {
 		super(id);
 	}

@@ -4,15 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import net.joesoft.andoria.brain.AndoriaBrain;
+import net.joesoft.andoria.brain.ObjectType;
 import net.joesoft.andoria.brain.commands.Command;
-import net.joesoft.andoria.brain.net.ClientCommunicator;
+import net.joesoft.andoria.brain.commands.PositionUpdateCmd;
+import net.joesoft.andoria.brain.commands.SpawnObjectCmd;
+import net.joesoft.andoria.brain.net.ServerCommunicator;
 import net.joesoft.andoria.client.gfx.Terrain;
 import net.joesoft.andoria.client.input.KeyboardProcessor;
 import net.joesoft.andoria.client.input.MouseProcessor;
 import net.joesoft.andoria.client.model.GameObject;
-import net.joesoft.andoria.client.model.Ligth;
+import net.joesoft.andoria.client.model.Light;
 import net.joesoft.andoria.client.model.Player;
 import net.joesoft.andoria.client.model.Renderable;
 import net.joesoft.andoria.client.ui.FpsLabel;
@@ -25,9 +28,10 @@ import net.joesoft.andoria.client.utils.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameEngine {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -36,21 +40,20 @@ public class GameEngine {
 	private final MouseProcessor mouseProcessor = new MouseProcessor();
 	private final KeyboardProcessor keyboardProcessor = new KeyboardProcessor();
 	private final GameCamera camera = new GameCamera();
-	private final Ligth light = new Ligth();
-	private final Player player = new Player();
 	private final SettingsMenu settingsMenu = new SettingsMenu();
 	private final FpsLabel fpsLabel = new FpsLabel();
 	private final Stage stage = new Stage();
-//	private final AndoriaBrain brain = new AndoriaBrain();
 	private final StopWatch stopWatch = new StopWatch();
-	private final Collection<GameObject> gameObjects = new LinkedList<GameObject>();
-	private final LinkedList<Command> commands = new LinkedList<Command>();
-	private final ClientCommunicator com = new ClientCommunicator();
+	private final Map<Integer, GameObject> gameObjects = new Hashtable<Integer, GameObject>();
+	private final ServerCommunicator com = new ServerCommunicator();
+	private final ConcurrentLinkedQueue<Command> commands;
+	private float lastRenderDuration;
 
 	/**
 	 *
 	 */
 	public GameEngine() {
+		new Thread(new AndoriaBrain()).start();
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(stage);
 		multiplexer.addProcessor(keyboardProcessor);
@@ -61,11 +64,10 @@ public class GameEngine {
 
 		Gdx.input.setInputProcessor(multiplexer);
 		Gdx.graphics.setVSync(false);
-//		light.rotate(90);
 
-//		brain.start();
 		com.connect(1);
-//		gameObjects = brain.getNearObjects();
+		new Thread(com).start();
+		commands = com.getCommandQueue();
 	}
 
 	private void set3dGlSettings() {
@@ -84,18 +86,20 @@ public class GameEngine {
 	 *
 	 */
 	public void render() {
+		lastRenderDuration = Gdx.graphics.getRawDeltaTime();
 //		commands.add(com.receiveCommand());
 
 		clearScreen();
 		stopWatch.start();
-		final float renderTime = Gdx.graphics.getRawDeltaTime();
 		final int fps = Gdx.graphics.getFramesPerSecond();
 
-		processInput();
+		processMouseInput();
+		processKeyboardInput();
+		processCommands();
 		renderGameObjects();
 		moveCamera();
 
-		movePlayer(renderTime);
+//		movePlayer();
 //		moveLight(renderTime);
 
 		//===================== 3D stuff =====================
@@ -104,14 +108,14 @@ public class GameEngine {
 			coordinateSystem.render();
 		}
 
-		light.render();
+//		light.render();
 
 		if(Settings.getBoolean(Settings.Key.ENGINE_LIGHT)) {
 			lightOn();
 		}
 
 		terrain.render();
-		player.render();
+//		player.render();
 		lightOff();
 		//====================================================
 
@@ -125,7 +129,7 @@ public class GameEngine {
 	}
 
 	private void renderGameObjects() {
-		for(GameObject o : gameObjects) {
+		for(GameObject o : gameObjects.values()) {
 			if(o instanceof Renderable) {
 				((Renderable) o).render();
 			}
@@ -159,6 +163,81 @@ public class GameEngine {
 	 *
 	 */
 	private void moveCamera() {
+	}
+
+//	/**
+//	 * Moves the player (when the appropriate keys are pressed). The distance depends on how
+//	 * long the last screen needs to render.
+//	 */
+//	private void movePlayer() {
+//		float speed = player.speed;
+//		boolean movePlayer = false;
+//		float x = 0;
+//		float y = 0;
+//
+//		if(keyboardProcessor.isKeyPressed(Input.Keys.W)) {
+//			y += speed * lastRenderDuration;
+//			movePlayer = true;
+//		}
+//
+//		if(keyboardProcessor.isKeyPressed(Input.Keys.S)) {
+//			y -= speed * lastRenderDuration;
+//			movePlayer = true;
+//		}
+//
+//		if(keyboardProcessor.isKeyPressed(Input.Keys.A)) {
+//			x += speed * lastRenderDuration;
+//			movePlayer = true;
+//		}
+//
+//		if(keyboardProcessor.isKeyPressed(Input.Keys.D)) {
+//			x -= speed * lastRenderDuration;
+//			movePlayer = true;
+//		}
+//
+//		if(movePlayer) {
+//			final float oldHeight = player.z;
+//			player.x = x;
+//			player.y = y;
+//			final float newHeight = terrain.getHeight(player.x, player.y);
+//			player.z = newHeight;
+//
+//			if(Settings.getString(Settings.Key.ENGINE_CAMERAMODE).equalsIgnoreCase(CameraMode.ATTACHED.name())) {
+//				camera.lookAt(new Vector3(player.x, player.y, player.z));
+//				camera.move(x, y, newHeight - oldHeight);
+//			}
+//		}
+//	}
+
+	/**
+
+//	 * Moves the light mesh. The distance depends on how long the last screen needs to render.
+//	 *
+//	 * @param renderTime the time the last screen needs to render; to decide the distance of the movement
+//	 */
+//	private void moveLight(float renderTime) {
+//		if(light.getPosition().x > 50) {
+//			light.getPosition().set(0, 0, 3);
+//		}
+//
+//		final float lightSpeed = light.speed;
+//		light.move(lightSpeed * renderTime, lightSpeed * renderTime, 0);
+//		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
+//	}
+
+	/**
+	 * Processing keyboard input.
+	 */
+	private void processKeyboardInput() {
+		if(keyboardProcessor.wasKeyReleased(Input.Keys.ESCAPE)) {
+			settingsMenu.setVisible(!settingsMenu.isVisible());
+		}
+	}
+
+	/**
+	 * Processing mouse input.
+	 */
+	private void processMouseInput() {
 		final List<Integer> pressedButtons = mouseProcessor.pressedButtons();
 		final int scrolled = mouseProcessor.getScrolled();
 		final float mouseSpeed = Settings.getFloat(Settings.Key.INPUT_MOUSE_SPEED);
@@ -176,81 +255,40 @@ public class GameEngine {
 		} else {
 			if(pressedButtons.contains(Input.Buttons.RIGHT)) {
 				camera.rotate(deltaX, deltaY);
-				player.rotate(deltaX);
+//				player.rotate(deltaX);
 			}
 		}
 
 		camera.zoom(scrolled);
 	}
 
-	/**
-	 * Moves the player (when the appropriate keys are pressed). The distance depends on how
-	 * long the last screen needs to render.
-	 *
-	 * @param renderTime the time the last screen needs to render; to decide the distance of the movement
-	 */
-	private void movePlayer(float renderTime) {
-		float speed = player.speed;
-		boolean movePlayer = false;
-		float x = 0;
-		float y = 0;
+	private void processCommands() {
+		final long startTime = System.currentTimeMillis();
 
-		if(keyboardProcessor.isKeyPressed(Input.Keys.W)) {
-			y += speed * renderTime;
-			movePlayer = true;
-		}
+		while(true) {
+			// Limit the command processing to x ms otherwhise this could block the rendering phase.
+			if(System.currentTimeMillis() - startTime > 5) {
+				break;
+			}
 
-		if(keyboardProcessor.isKeyPressed(Input.Keys.S)) {
-			y -= speed * renderTime;
-			movePlayer = true;
-		}
+			if(commands.isEmpty()) {
+				continue;
+			}
 
-		if(keyboardProcessor.isKeyPressed(Input.Keys.A)) {
-			x += speed * renderTime;
-			movePlayer = true;
-		}
+			final Command cmd = commands.remove();
+			if(cmd instanceof PositionUpdateCmd) {
 
-		if(keyboardProcessor.isKeyPressed(Input.Keys.D)) {
-			x -= speed * renderTime;
-			movePlayer = true;
-		}
-
-		if(movePlayer) {
-			final float oldHeight = player.z;
-			player.x = x;
-			player.y = y;
-			final float newHeight = terrain.getHeight(player.x, player.y);
-			player.z = newHeight;
-
-			if(Settings.getString(Settings.Key.ENGINE_CAMERAMODE).equalsIgnoreCase(CameraMode.ATTACHED.name())) {
-				camera.lookAt(new Vector3(player.x, player.y, player.z));
-				camera.move(x, y, newHeight - oldHeight);
+			} else if (cmd instanceof SpawnObjectCmd) {
+				spawnObject((SpawnObjectCmd)cmd);
 			}
 		}
 	}
 
-	/**
-
-	 * Moves the light mesh. The distance depends on how long the last screen needs to render.
-	 *
-	 * @param renderTime the time the last screen needs to render; to decide the distance of the movement
-	 */
-//	private void moveLight(float renderTime) {
-//		if(light.getPosition().x > 50) {
-//			light.getPosition().set(0, 0, 3);
-//		}
-//
-//		final float lightSpeed = light.speed;
-//		light.move(lightSpeed * renderTime, lightSpeed * renderTime, 0);
-//		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
-//	}
-
-	/**
-	 * Processing all player inputs.
-	 */
-	private void processInput() {
-		if(keyboardProcessor.wasKeyReleased(Input.Keys.ESCAPE)) {
-			settingsMenu.setVisible(!settingsMenu.isVisible());
+	private void spawnObject(SpawnObjectCmd cmd) {
+		if(cmd.objectType == ObjectType.PLAYER) {
+			gameObjects.put(cmd.id, new Player());
+		} else if(cmd.objectType == ObjectType.LIGHT) {
+			gameObjects.put(cmd.id, new Light());
 		}
 	}
 
@@ -258,10 +296,23 @@ public class GameEngine {
 	 * Enables light.
 	 */
 	private void lightOn() {
+		//TODO not performant!!
+		Light light = null;
+		for(GameObject o : gameObjects.values()) {
+			if(o.type == ObjectType.LIGHT) {
+				light = (Light)o;
+			}
+		}
+
+
 		Gdx.gl10.glShadeModel(GL10.GL_SMOOTH);
 		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, new float[]{1, 1, 1, 1}, 0);
 		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, new float[]{1, 1, 1, 1}, 0);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{light.x, light.y, light.z, 1}, 0);
+		if(light != null) {
+			Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{light.x, light.y, light.z, 1}, 0);
+		} else {
+			Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{0, 0, 0, 1}, 0);
+		}
 		Gdx.gl.glEnable(GL10.GL_LIGHTING);
 		Gdx.gl.glEnable(GL10.GL_LIGHT0);
 	}

@@ -6,16 +6,18 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
+import net.joesoft.andoria.brain.ObjectType;
 import net.joesoft.andoria.client.utils.MeshGenerator;
 import net.joesoft.andoria.client.utils.VertexBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Ligth extends GameObject implements Renderable {
+public class Light extends GameObject implements Renderable {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final Mesh mesh;
 
-	public Ligth() {
+	public Light() {
+		super(ObjectType.LIGHT);
 		final VertexAttributes attributes = new VertexAttributes(
 			new VertexAttribute(VertexAttributes.Usage.Position, 3, null),
 			new VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, null),
