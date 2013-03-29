@@ -23,6 +23,14 @@ public class StopWatch {
 	}
 
 	/**
+	 * Reseting the watch.
+	 */
+	public void reset() {
+		running = false;
+		start();
+	}
+
+	/**
 	 * Returns the time elapsed in milliseconds till the last call of the start() method.
 	 * This method does not stop the time counting.
 	 *
@@ -34,15 +42,5 @@ public class StopWatch {
 		} else {
 			return System.currentTimeMillis() - startTime;
 		}
-	}
-
-    /**
-     * Mesures the time (in milliseconds) past after the last call of the start() mehtod
-	 *
-     * @return the time between start() and stop() was called
-     */
-	public long stop() {
-		running = false;
-		return elapsedTime();
 	}
 }

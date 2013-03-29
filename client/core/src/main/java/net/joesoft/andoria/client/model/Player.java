@@ -12,14 +12,13 @@ import net.joesoft.andoria.client.utils.VertexBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Player extends MoveableObject {
+public class Player extends GameObject implements Renderable {
 	private static final Logger log = LoggerFactory.getLogger(Player.class);
 	private final Texture texture;
 	private final Mesh mesh;
 
 	public Player() {
-		super(1, 1, 0);
-		setSpeed(2f);
+		speed = 2f;
 		final VertexAttributes attributes = new VertexAttributes(
 			new VertexAttribute(VertexAttributes.Usage.Position, 3, null),
 			new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, null),
@@ -44,8 +43,8 @@ public class Player extends MoveableObject {
 		// positioning
 		Gdx.gl10.glPushMatrix();
 		// -0.15f to have the origin of the box in the middle (half of size)
-		Gdx.gl10.glTranslatef(position.x - 0.15f, position.y - 0.15f, position.z);
-		Gdx.gl10.glRotatef(-directionAngle, 0, 0, 1);
+		Gdx.gl10.glTranslatef(x - 0.15f, y - 0.15f, z);
+//		Gdx.gl10.glRotatef(-direction, 0, 0, 1);
 		mesh.render(GL20.GL_TRIANGLES);
 		Gdx.gl10.glPopMatrix();
 

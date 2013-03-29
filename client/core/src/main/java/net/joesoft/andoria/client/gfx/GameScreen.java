@@ -1,9 +1,10 @@
 package net.joesoft.andoria.client.gfx;
 
 import com.badlogic.gdx.Screen;
+import net.joesoft.andoria.client.GameEngine;
 
 public class GameScreen implements Screen {
-	final RenderEngine engine = new RenderEngine();
+	final GameEngine engine = new GameEngine();
 
 	public void dispose() {
 	}

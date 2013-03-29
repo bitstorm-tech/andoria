@@ -1,26 +1,35 @@
-package net.joesoft.andoria.client.gfx;
+package net.joesoft.andoria.client;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import net.joesoft.andoria.brain.AndoriaBrain;
+import net.joesoft.andoria.brain.commands.Command;
+import net.joesoft.andoria.brain.net.ClientCommunicator;
+import net.joesoft.andoria.client.gfx.Terrain;
 import net.joesoft.andoria.client.input.KeyboardProcessor;
 import net.joesoft.andoria.client.input.MouseProcessor;
+import net.joesoft.andoria.client.model.GameObject;
+import net.joesoft.andoria.client.model.Ligth;
 import net.joesoft.andoria.client.model.Player;
+import net.joesoft.andoria.client.model.Renderable;
 import net.joesoft.andoria.client.ui.FpsLabel;
 import net.joesoft.andoria.client.ui.SettingsMenu;
 import net.joesoft.andoria.client.utils.CameraMode;
 import net.joesoft.andoria.client.utils.CoordinateSystem;
 import net.joesoft.andoria.client.utils.GameCamera;
 import net.joesoft.andoria.client.utils.Settings;
+import net.joesoft.andoria.client.utils.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
-public class RenderEngine {
+public class GameEngine {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final Terrain terrain = new Terrain();
 	private final CoordinateSystem coordinateSystem = new CoordinateSystem();
@@ -32,12 +41,16 @@ public class RenderEngine {
 	private final SettingsMenu settingsMenu = new SettingsMenu();
 	private final FpsLabel fpsLabel = new FpsLabel();
 	private final Stage stage = new Stage();
-	private final AndoriaBrain brain = new AndoriaBrain();
+//	private final AndoriaBrain brain = new AndoriaBrain();
+	private final StopWatch stopWatch = new StopWatch();
+	private final Collection<GameObject> gameObjects = new LinkedList<GameObject>();
+	private final LinkedList<Command> commands = new LinkedList<Command>();
+	private final ClientCommunicator com = new ClientCommunicator();
 
 	/**
 	 *
 	 */
-	public RenderEngine() {
+	public GameEngine() {
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(stage);
 		multiplexer.addProcessor(keyboardProcessor);
@@ -48,9 +61,11 @@ public class RenderEngine {
 
 		Gdx.input.setInputProcessor(multiplexer);
 		Gdx.graphics.setVSync(false);
-		light.rotate(90);
+//		light.rotate(90);
 
-		brain.start();
+//		brain.start();
+		com.connect(1);
+//		gameObjects = brain.getNearObjects();
 	}
 
 	private void set3dGlSettings() {
@@ -69,14 +84,19 @@ public class RenderEngine {
 	 *
 	 */
 	public void render() {
+//		commands.add(com.receiveCommand());
+
+		clearScreen();
+		stopWatch.start();
 		final float renderTime = Gdx.graphics.getRawDeltaTime();
 		final int fps = Gdx.graphics.getFramesPerSecond();
 
 		processInput();
-		clearScreen();
+		renderGameObjects();
 		moveCamera();
+
 		movePlayer(renderTime);
-		moveLight(renderTime);
+//		moveLight(renderTime);
 
 		//===================== 3D stuff =====================
 		set3dGlSettings();
@@ -87,12 +107,12 @@ public class RenderEngine {
 		light.render();
 
 		if(Settings.getBoolean(Settings.Key.ENGINE_LIGHT)) {
-			light.on();
+			lightOn();
 		}
 
 		terrain.render();
 		player.render();
-		light.off();
+		lightOff();
 		//====================================================
 
 
@@ -102,6 +122,14 @@ public class RenderEngine {
 		fpsLabel.setFps(fps);
 		stage.draw();
 		//====================================================
+	}
+
+	private void renderGameObjects() {
+		for(GameObject o : gameObjects) {
+			if(o instanceof Renderable) {
+				((Renderable) o).render();
+			}
+		}
 	}
 
 	/**
@@ -115,7 +143,7 @@ public class RenderEngine {
 	}
 
 	/**
-	 *
+	 * Either enables wireframe rendering mode or filled rendering mode (depending on the settings).
 	 */
 	private void switchPolygonMode() {
 		if(Settings.getBoolean(Settings.Key.ENGINE_WIREFRAME)) {
@@ -162,7 +190,7 @@ public class RenderEngine {
 	 * @param renderTime the time the last screen needs to render; to decide the distance of the movement
 	 */
 	private void movePlayer(float renderTime) {
-		float speed = player.getSpeed();
+		float speed = player.speed;
 		boolean movePlayer = false;
 		float x = 0;
 		float y = 0;
@@ -188,13 +216,14 @@ public class RenderEngine {
 		}
 
 		if(movePlayer) {
-			final float oldHeight = player.getPosition().z;
-			player.move(x, y, 0);
-			final float newHeight = terrain.getHeight(player.getPosition().x, player.getPosition().y);
-			player.getPosition().z = newHeight;
+			final float oldHeight = player.z;
+			player.x = x;
+			player.y = y;
+			final float newHeight = terrain.getHeight(player.x, player.y);
+			player.z = newHeight;
 
 			if(Settings.getString(Settings.Key.ENGINE_CAMERAMODE).equalsIgnoreCase(CameraMode.ATTACHED.name())) {
-				camera.lookAt(player.getPosition());
+				camera.lookAt(new Vector3(player.x, player.y, player.z));
 				camera.move(x, y, newHeight - oldHeight);
 			}
 		}
@@ -206,19 +235,42 @@ public class RenderEngine {
 	 *
 	 * @param renderTime the time the last screen needs to render; to decide the distance of the movement
 	 */
-	private void moveLight(float renderTime) {
-		if(light.getPosition().x > 50) {
-			light.getPosition().set(0, 0, 3);
-		}
+//	private void moveLight(float renderTime) {
+//		if(light.getPosition().x > 50) {
+//			light.getPosition().set(0, 0, 3);
+//		}
+//
+//		final float lightSpeed = light.speed;
+//		light.move(lightSpeed * renderTime, lightSpeed * renderTime, 0);
+//		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
+//	}
 
-		final float lightSpeed = light.getSpeed();
-		light.move(lightSpeed * renderTime, lightSpeed * renderTime, 0);
-		light.getPosition().z = terrain.getHeight(light.getPosition().x, light.getPosition().y) + 3;
-	}
-
+	/**
+	 * Processing all player inputs.
+	 */
 	private void processInput() {
 		if(keyboardProcessor.wasKeyReleased(Input.Keys.ESCAPE)) {
 			settingsMenu.setVisible(!settingsMenu.isVisible());
 		}
+	}
+
+	/**
+	 * Enables light.
+	 */
+	private void lightOn() {
+		Gdx.gl10.glShadeModel(GL10.GL_SMOOTH);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, new float[]{1, 1, 1, 1}, 0);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, new float[]{1, 1, 1, 1}, 0);
+		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{light.x, light.y, light.z, 1}, 0);
+		Gdx.gl.glEnable(GL10.GL_LIGHTING);
+		Gdx.gl.glEnable(GL10.GL_LIGHT0);
+	}
+
+	/**
+	 * Disables light.
+	 */
+	private void lightOff() {
+		Gdx.gl.glDisable(GL10.GL_LIGHTING);
+		Gdx.gl.glDisable(GL10.GL_LIGHT0);
 	}
 }

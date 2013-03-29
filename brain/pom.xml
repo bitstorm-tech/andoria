@@ -7,13 +7,44 @@
 	<packaging>jar</packaging>
 	<name>Andoria Brain</name>
 	<description>The central game logic component of Andoria</description>
-	
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+                            <useUniqueVersions>false</useUniqueVersions>
+							<Main-Class>net.joesoft.andoria.brain.AndoriaBrain</Main-Class>
+						</manifest>
+					</archive>
+					<excludes>
+						<exclude>*.cmd</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>	
 	
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.1.1</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -1,8 +1,8 @@
 package net.joesoft.andoria.client.model;
 
-import net.joesoft.andoria.client.utils.VertexBuffer;
-
+/**
+ * All classes implementing this interface can be rendered.
+ */
 public interface Renderable {
 	public void render();
-	public VertexBuffer getVertexBuffer();
 }

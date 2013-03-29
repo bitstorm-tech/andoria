@@ -1,4 +1,4 @@
-package net.joesoft.andoria.client.gfx;
+package net.joesoft.andoria.client.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -6,13 +6,12 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
-import net.joesoft.andoria.client.model.MoveableObject;
 import net.joesoft.andoria.client.utils.MeshGenerator;
 import net.joesoft.andoria.client.utils.VertexBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Ligth extends MoveableObject {
+public class Ligth extends GameObject implements Renderable {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final Mesh mesh;
 
@@ -29,27 +28,12 @@ public class Ligth extends MoveableObject {
 		buffer.calculateNormals();
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, attributes);
 		mesh.setVertices(buffer.toFloatArray());
-		move(0, 0, 3);
-		setSpeed(1);
-	}
-
-	public void on() {
-		Gdx.gl10.glShadeModel(GL10.GL_SMOOTH);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, new float[]{1, 1, 1, 1}, 0);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, new float[]{1, 1, 1, 1}, 0);
-		Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[]{position.x, position.y, position.z, 1}, 0);
-		Gdx.gl.glEnable(GL10.GL_LIGHTING);
-		Gdx.gl.glEnable(GL10.GL_LIGHT0);
-	}
-
-	public void off() {
-		Gdx.gl.glDisable(GL10.GL_LIGHTING);
-		Gdx.gl.glDisable(GL10.GL_LIGHT0);
+		speed = 1;
 	}
 
 	public void render() {
 		Gdx.gl10.glPushMatrix();
-		Gdx.gl10.glTranslatef(position.x, position.y, position.z);
+		Gdx.gl10.glTranslatef(x, y, z);
 		mesh.render(GL10.GL_TRIANGLES);
 		Gdx.gl10.glPopMatrix();
 	}
