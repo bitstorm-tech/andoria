@@ -16,7 +16,7 @@ public class GameCamera {
 		final int resX = Settings.getInteger(Settings.Key.ENGINE_RESOLUTION_X);
 		final int resY = Settings.getInteger(Settings.Key.ENGINE_RESOLUTION_Y);
 		camera = new PerspectiveCamera(60, resX, resY);
-		camera.far = 1000f;
+		camera.far = 2000f;
 		camera.near = 0.1f;
 		camera.translate(0, -5, 5);
 		camera.lookAt(0, 0, 0);

@@ -1,4 +1,4 @@
-package net.joesoft.andoria.client.model;
+package net.joesoft.andoria.client.gfx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import net.joesoft.andoria.brain.ObjectType;
+import net.joesoft.andoria.client.model.GameObject;
 import net.joesoft.andoria.client.utils.MeshGenerator;
 import net.joesoft.andoria.client.utils.VertexBuffer;
 import org.slf4j.Logger;
@@ -35,6 +36,11 @@ public class Player extends GameObject implements Renderable {
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
 		mesh.setVertices(buffer.toFloatArray());
 		texture = new Texture(Gdx.files.classpath("textures/wood1.png"));
+	}
+
+	@Override
+	public boolean isIlluminated() {
+		return true;
 	}
 
 	public void render() {

@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
-public class Terrain {
+public class Terrain implements Renderable {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private Mesh mesh;
 	private Texture texture;
@@ -35,6 +35,12 @@ public class Terrain {
 		generate();
 	}
 
+	@Override
+	public boolean isIlluminated() {
+		return true;
+	}
+
+	@Override
 	public void render() {
 		Gdx.gl10.glEnable(GL10.GL_TEXTURE_2D);
 		texture.bind();

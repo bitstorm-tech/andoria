@@ -11,9 +11,15 @@ import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * The CommunicationManager manages the incoming (and only the incoming!) commands sent by
- * the Andoria server. Outgoing commands must be handled separately. All incoming commands
- * are stored in a queue which must be set in the constructor of this class.
+ * The Communicator manages the communication between server and client. Because the Communicator
+ * implements the {@link Runnable} interface, you can run it in a own thread.
+ * <p>
+ * When running in his own thread the Communicator queues all incoming commands automatically. In this
+ * case you must use the method {@link net.joesoft.andoria.brain.net.Communicator#getCommand()}.
+ * <b>Attention:</b> you have to take care to call the method {@link net.joesoft.andoria.brain.net.Communicator#getCommand()}
+ * often enough, otherwise the growing queue will cause memory problems. You get a warning in the log if
+ * the size becomes too big.
+ * </p>
  */
 public class Communicator implements Runnable {
 	private static final Logger log = LoggerFactory.getLogger(Communicator.class);
@@ -38,6 +44,10 @@ public class Communicator implements Runnable {
 		}
 	}
 
+	/**
+	 * @param cmd the Command which shall be transmitted
+	 * @return true if transmission was successful, otherwise false
+	 */
 	public boolean sendCommand(Command cmd) {
 		if(!channelsAlive()) {
 			return false;
@@ -53,6 +63,11 @@ public class Communicator implements Runnable {
 		return true;
 	}
 
+	/**
+	 * This method must be used if the Communicator is not running in his own thread.
+	 *
+	 * @return the next incoming command
+	 */
 	public Command receiveCommand() {
 		if(!channelsAlive()) {
 			return null;
@@ -68,6 +83,7 @@ public class Communicator implements Runnable {
 		}
 	}
 
+	@Override
 	public void run() {
 		isRunning = true;
 		while(true) {
@@ -80,10 +96,25 @@ public class Communicator implements Runnable {
 		}
 	}
 
-	public ConcurrentLinkedQueue<Command> getCommandQueue() {
-		return incomingCommands;
+	/**
+	 * @return true if commands are in the queue, otherwise false
+	 */
+	public boolean hasCommandsQueued() {
+		return !incomingCommands.isEmpty();
 	}
 
+	/**
+	 * This method must be used if the Communicator is running in his own thread.
+	 *
+	 * @return the oldest command from the queue which will be also removed from the queue
+	 */
+	public Command getCommand() {
+		return incomingCommands.remove();
+	}
+
+	/**
+	 * @return true if this Communicator is running in a own thread
+	 */
 	public boolean isRunning() {
 		return isRunning;
 	}

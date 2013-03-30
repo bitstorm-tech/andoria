@@ -1,7 +1,6 @@
-package net.joesoft.andoria.client.gfx;
+package net.joesoft.andoria.client;
 
 import com.badlogic.gdx.Screen;
-import net.joesoft.andoria.client.GameEngine;
 
 public class GameScreen implements Screen {
 	final GameEngine engine = new GameEngine();

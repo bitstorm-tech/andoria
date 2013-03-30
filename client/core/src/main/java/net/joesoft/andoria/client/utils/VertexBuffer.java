@@ -16,12 +16,12 @@ public class VertexBuffer {
 	private List<Vector2> textureCoords = new ArrayList<Vector2>();
 	private List<Vector3> normals = new ArrayList<Vector3>();
 	public static Vector2[] standardTextureCoordinates = new Vector2[] {
+		new Vector2(0, 1),
+		new Vector2(1, 1),
 		new Vector2(0, 0),
-		new Vector2(1, 0),
-		new Vector2(0, 1),
-		new Vector2(0, 1),
-		new Vector2(1, 0),
-		new Vector2(1, 1)
+		new Vector2(0, 0),
+		new Vector2(1, 1),
+		new Vector2(1, 0)
 	};
 
 	public VertexBuffer() {

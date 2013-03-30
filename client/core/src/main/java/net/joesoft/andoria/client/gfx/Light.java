@@ -1,4 +1,4 @@
-package net.joesoft.andoria.client.model;
+package net.joesoft.andoria.client.gfx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import net.joesoft.andoria.brain.ObjectType;
+import net.joesoft.andoria.client.model.GameObject;
 import net.joesoft.andoria.client.utils.MeshGenerator;
 import net.joesoft.andoria.client.utils.VertexBuffer;
 import org.slf4j.Logger;
@@ -31,6 +32,11 @@ public class Light extends GameObject implements Renderable {
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, attributes);
 		mesh.setVertices(buffer.toFloatArray());
 		speed = 1;
+	}
+
+	@Override
+	public boolean isIlluminated() {
+		return false;
 	}
 
 	public void render() {

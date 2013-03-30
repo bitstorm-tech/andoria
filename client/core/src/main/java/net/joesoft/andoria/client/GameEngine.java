@@ -11,13 +11,14 @@ import net.joesoft.andoria.brain.commands.Command;
 import net.joesoft.andoria.brain.commands.PositionUpdateCmd;
 import net.joesoft.andoria.brain.commands.SpawnObjectCmd;
 import net.joesoft.andoria.brain.net.ServerCommunicator;
+import net.joesoft.andoria.client.gfx.Light;
+import net.joesoft.andoria.client.gfx.Player;
+import net.joesoft.andoria.client.gfx.Renderable;
+import net.joesoft.andoria.client.gfx.Skybox;
 import net.joesoft.andoria.client.gfx.Terrain;
 import net.joesoft.andoria.client.input.KeyboardProcessor;
 import net.joesoft.andoria.client.input.MouseProcessor;
 import net.joesoft.andoria.client.model.GameObject;
-import net.joesoft.andoria.client.model.Light;
-import net.joesoft.andoria.client.model.Player;
-import net.joesoft.andoria.client.model.Renderable;
 import net.joesoft.andoria.client.ui.FpsLabel;
 import net.joesoft.andoria.client.ui.SettingsMenu;
 import net.joesoft.andoria.client.utils.CameraMode;
@@ -31,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameEngine {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -46,7 +46,7 @@ public class GameEngine {
 	private final StopWatch stopWatch = new StopWatch();
 	private final Map<Integer, GameObject> gameObjects = new Hashtable<Integer, GameObject>();
 	private final ServerCommunicator com = new ServerCommunicator();
-	private final ConcurrentLinkedQueue<Command> commands;
+	private final Skybox skybox;
 	private float lastRenderDuration;
 
 	/**
@@ -67,7 +67,10 @@ public class GameEngine {
 
 		com.connect(1);
 		new Thread(com).start();
-		commands = com.getCommandQueue();
+
+		final Player player = new Player();
+		gameObjects.put(1, player);
+		skybox = new Skybox(player, 200, false);
 	}
 
 	private void set3dGlSettings() {
@@ -87,7 +90,6 @@ public class GameEngine {
 	 */
 	public void render() {
 		lastRenderDuration = Gdx.graphics.getRawDeltaTime();
-//		commands.add(com.receiveCommand());
 
 		clearScreen();
 		stopWatch.start();
@@ -95,12 +97,8 @@ public class GameEngine {
 
 		processMouseInput();
 		processKeyboardInput();
-		processCommands();
-		renderGameObjects();
+//		processCommands();
 		moveCamera();
-
-//		movePlayer();
-//		moveLight(renderTime);
 
 		//===================== 3D stuff =====================
 		set3dGlSettings();
@@ -108,15 +106,13 @@ public class GameEngine {
 			coordinateSystem.render();
 		}
 
-//		light.render();
-
+		skybox.render();
 		if(Settings.getBoolean(Settings.Key.ENGINE_LIGHT)) {
 			lightOn();
 		}
-
 		terrain.render();
-//		player.render();
 		lightOff();
+		renderGameObjects();
 		//====================================================
 
 
@@ -131,7 +127,13 @@ public class GameEngine {
 	private void renderGameObjects() {
 		for(GameObject o : gameObjects.values()) {
 			if(o instanceof Renderable) {
-				((Renderable) o).render();
+				final Renderable renderable = (Renderable)o;
+				if(renderable.isIlluminated() && Settings.getBoolean(Settings.Key.ENGINE_LIGHT)) {
+					lightOn();
+				}
+
+				renderable.render();
+				lightOff();
 			}
 		}
 	}
@@ -271,11 +273,11 @@ public class GameEngine {
 				break;
 			}
 
-			if(commands.isEmpty()) {
+			if(!com.hasCommandsQueued()) {
 				continue;
 			}
 
-			final Command cmd = commands.remove();
+			final Command cmd = com.getCommand();
 			if(cmd instanceof PositionUpdateCmd) {
 
 			} else if (cmd instanceof SpawnObjectCmd) {
@@ -285,10 +287,15 @@ public class GameEngine {
 	}
 
 	private void spawnObject(SpawnObjectCmd cmd) {
+		final int objectId = cmd.objectId;
+		if(gameObjects.containsKey(objectId)) {
+			return;
+		}
+
 		if(cmd.objectType == ObjectType.PLAYER) {
-			gameObjects.put(cmd.id, new Player());
+			gameObjects.put(objectId, new Player());
 		} else if(cmd.objectType == ObjectType.LIGHT) {
-			gameObjects.put(cmd.id, new Light());
+			gameObjects.put(objectId, new Light());
 		}
 	}
 

@@ -1,7 +1,5 @@
 package net.joesoft.andoria.client;
 
-import net.joesoft.andoria.client.gfx.GameScreen;
-
 import com.badlogic.gdx.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
