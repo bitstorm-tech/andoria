@@ -8,25 +8,23 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.math.Vector3;
-import net.joesoft.andoria.client.model.GameObject;
+import net.joesoft.andoria.client.utils.Constants;
+import net.joesoft.andoria.client.utils.Settings;
 import net.joesoft.andoria.client.utils.VertexBuffer;
 
 import java.util.LinkedList;
 
 public class Skybox implements Renderable {
 	//TODO use texture region
-	private final GameObject surrounded;
 	private final LinkedList<Texture> textures = new LinkedList<Texture>();
 	private final LinkedList<Mesh> meshes = new LinkedList<Mesh>();
 	private final int renderSides;
 
 	/**
-	 * @param surrounded the object which shall be surrounded by the Skybox
 	 * @param distance the distance between the surrounded object and the Skybox sides
 	 * @param renderBottom if false the bottom of the skybox will not be rendered
 	 */
-	public Skybox(GameObject surrounded, float distance, boolean renderBottom) {
-		this.surrounded = surrounded;
+	public Skybox(float distance, boolean renderBottom) {
 
 		if(renderBottom) {
 			renderSides = 6;
@@ -41,16 +39,15 @@ public class Skybox implements Renderable {
 
 		VertexBuffer buffer;
 		Mesh mesh;
-		final float x = surrounded.x;
-		final float y = surrounded.y;
-		final Vector3 v1 = new Vector3(x - distance, y + distance, -distance);
-		final Vector3 v2 = new Vector3(x + distance, y + distance, -distance);
-		final Vector3 v3 = new Vector3(x - distance, y + distance,  distance);
-		final Vector3 v4 = new Vector3(x - distance, y + distance,  distance);
-		final Vector3 v5 = new Vector3(x + distance, y + distance, -distance);
-		final Vector3 v6 = new Vector3(x + distance, y + distance,  distance);
+		final Vector3 v1 = new Vector3(-distance, distance, -distance);
+		final Vector3 v2 = new Vector3( distance, distance, -distance);
+		final Vector3 v3 = new Vector3(-distance, distance,  distance);
+		final Vector3 v4 = new Vector3(-distance, distance,  distance);
+		final Vector3 v5 = new Vector3( distance, distance, -distance);
+		final Vector3 v6 = new Vector3( distance, distance,  distance);
+		final String skyboxDir = Constants.skyboxDir;
 
-		// Side 1 =============================================================================
+		// Side 1 =================================================================================
 		buffer = new VertexBuffer(attributes);
 		buffer.addVertexCoordinates(v1);
 		buffer.addVertexCoordinates(v2);
@@ -62,9 +59,9 @@ public class Skybox implements Renderable {
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
 		mesh.setVertices(buffer.toFloatArray());
 		meshes.add(mesh);
-		textures.add(new Texture(Gdx.files.classpath("textures/skybox/1.png")));
+		textures.add(new Texture(Gdx.files.classpath(skyboxDir + "1.png")));
 
-		// Side 2 =============================================================================
+		// Side 2 =================================================================================
 		buffer = new VertexBuffer(attributes);
 		buffer.addVertexCoordinates(v1.rotate(-90, 0, 0, 1));
 		buffer.addVertexCoordinates(v2.rotate(-90, 0, 0, 1));
@@ -76,9 +73,9 @@ public class Skybox implements Renderable {
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
 		mesh.setVertices(buffer.toFloatArray());
 		meshes.add(mesh);
-		textures.add(new Texture(Gdx.files.classpath("textures/skybox/2.png")));
+		textures.add(new Texture(Gdx.files.classpath(skyboxDir + "2.png")));
 
-		// Side 3 =============================================================================
+		// Side 3 =================================================================================
 		buffer = new VertexBuffer(attributes);
 		buffer.addVertexCoordinates(v1.rotate(-90, 0, 0, 1));
 		buffer.addVertexCoordinates(v2.rotate(-90, 0, 0, 1));
@@ -90,9 +87,9 @@ public class Skybox implements Renderable {
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
 		mesh.setVertices(buffer.toFloatArray());
 		meshes.add(mesh);
-		textures.add(new Texture(Gdx.files.classpath("textures/skybox/3.png")));
+		textures.add(new Texture(Gdx.files.classpath(skyboxDir + "3.png")));
 
-		// Side 4 =============================================================================
+		// Side 4 =================================================================================
 		buffer = new VertexBuffer(attributes);
 		buffer.addVertexCoordinates(v1.rotate(-90, 0, 0, 1));
 		buffer.addVertexCoordinates(v2.rotate(-90, 0, 0, 1));
@@ -104,9 +101,9 @@ public class Skybox implements Renderable {
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
 		mesh.setVertices(buffer.toFloatArray());
 		meshes.add(mesh);
-		textures.add(new Texture(Gdx.files.classpath("textures/skybox/4.png")));
+		textures.add(new Texture(Gdx.files.classpath(skyboxDir + "4.png")));
 
-		// Side top ============================================================================
+		// Side top ===============================================================================
 		buffer = new VertexBuffer(attributes);
 		buffer.addVertexCoordinates(v1.rotate(-90, 0, 0, 1).rotate(90, 1, 0, 0));
 		buffer.addVertexCoordinates(v2.rotate(-90, 0, 0, 1).rotate(90, 1, 0, 0));
@@ -118,12 +115,33 @@ public class Skybox implements Renderable {
 		mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
 		mesh.setVertices(buffer.toFloatArray());
 		meshes.add(mesh);
-		textures.add(new Texture(Gdx.files.classpath("textures/skybox/t.png")));
+		textures.add(new Texture(Gdx.files.classpath(skyboxDir + "t.png")));
+
+		// Side bottom ============================================================================
+		if(renderBottom) {
+			buffer = new VertexBuffer(attributes);
+			buffer.addVertexCoordinates(v1.rotate(180, 1, 0, 0));
+			buffer.addVertexCoordinates(v2.rotate(180, 1, 0, 0));
+			buffer.addVertexCoordinates(v3.rotate(180, 1, 0, 0));
+			buffer.addVertexCoordinates(v4.rotate(180, 1, 0, 0));
+			buffer.addVertexCoordinates(v5.rotate(180, 1, 0, 0));
+			buffer.addVertexCoordinates(v6.rotate(180, 1, 0, 0));
+			buffer.addStandardTextureCoordinates();
+			mesh = new Mesh(true, buffer.getBufferSize(), 0, buffer.getAttributes());
+			mesh.setVertices(buffer.toFloatArray());
+			meshes.add(mesh);
+			textures.add(new Texture(Gdx.files.classpath(skyboxDir + "b.png")));
+		}
 	}
 
 	@Override
 	public boolean isIlluminated() {
 		return false;
+	}
+
+	@Override
+	public boolean isVisible() {
+		return Settings.getBoolean(Settings.Key.ENGINE_SHOWSKYBOX);
 	}
 
 	@Override

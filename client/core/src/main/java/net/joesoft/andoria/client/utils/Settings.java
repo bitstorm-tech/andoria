@@ -1,6 +1,5 @@
 package net.joesoft.andoria.client.utils;
 
-import net.joesoft.andoria.client.ui.Resources;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +26,7 @@ public class Settings {
 		ENGINE_SHOWNORMALS,
 		ENGINE_CAMERAMODE,
 		ENGINE_TARGETPLATFORM,
+		ENGINE_SHOWSKYBOX,
 		INPUT_MOUSE_SCROLLSPEED,
 		INPUT_MOUSE_SPEED,
 		UI_SHOWFPS;
@@ -39,7 +38,7 @@ public class Settings {
 	}
 
 	private static final Logger log = LoggerFactory.getLogger(Settings.class);
-    private static final HashMap<String, String> properties = new LinkedHashMap<String, String>();
+    private static final LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
 	private static boolean loaded = false;
 	private static final String COMMENT = "_COMMENT";
 	private static final String EMPTY_LINE = "_EMPTY_LINE";

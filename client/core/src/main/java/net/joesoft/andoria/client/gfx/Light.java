@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.VertexAttributes;
 import net.joesoft.andoria.brain.ObjectType;
 import net.joesoft.andoria.client.model.GameObject;
 import net.joesoft.andoria.client.utils.MeshGenerator;
+import net.joesoft.andoria.client.utils.Settings;
 import net.joesoft.andoria.client.utils.VertexBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,12 @@ public class Light extends GameObject implements Renderable {
 		return false;
 	}
 
+	@Override
+	public boolean isVisible() {
+		return Settings.getBoolean(Settings.Key.ENGINE_LIGHT);
+	}
+
+	@Override
 	public void render() {
 		Gdx.gl10.glPushMatrix();
 		Gdx.gl10.glTranslatef(x, y, z);

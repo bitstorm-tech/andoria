@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.esotericsoftware.tablelayout.Cell;
+import net.joesoft.andoria.client.utils.Resources;
 import net.joesoft.andoria.client.utils.Settings;
 
 public class SettingsMenu extends Window {
@@ -21,10 +22,12 @@ public class SettingsMenu extends Window {
 		addCheckBox(" Show Coordinate System", Settings.Key.ENGINE_SHOWCOORDINATESYSTEM).space(5);
 		row();
 		addCheckBox(" Show FPS", Settings.Key.UI_SHOWFPS).space(5);
+		row();
+		addCheckBox(" Show Skybox", Settings.Key.ENGINE_SHOWSKYBOX).space(5);
 
 		padTop(30);
-		setHeight(512);
-		setWidth(512);
+		setHeight(400);
+		setWidth(250);
 		setVisible(false);
 	}
 

@@ -43,6 +43,12 @@ public class Player extends GameObject implements Renderable {
 		return true;
 	}
 
+	@Override
+	public boolean isVisible() {
+		return true;
+	}
+
+	@Override
 	public void render() {
 		// textur binding
 		Gdx.gl10.glEnable(GL10.GL_TEXTURE_2D);

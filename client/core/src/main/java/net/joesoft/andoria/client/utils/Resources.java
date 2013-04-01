@@ -1,9 +1,8 @@
-package net.joesoft.andoria.client.ui;
+package net.joesoft.andoria.client.utils;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
-import net.joesoft.andoria.client.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

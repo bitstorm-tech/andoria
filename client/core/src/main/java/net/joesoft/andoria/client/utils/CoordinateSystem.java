@@ -2,8 +2,9 @@ package net.joesoft.andoria.client.utils;
 
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Vector3;
+import net.joesoft.andoria.client.gfx.Renderable;
 
-public class CoordinateSystem {
+public class CoordinateSystem implements Renderable {
 	private Mesh axis;
 	private boolean cameraAutoFollow = false;
 	private Vector3 originPosition = new Vector3(0, 0, 0);
@@ -15,9 +16,20 @@ public class CoordinateSystem {
 		generate();
 	}
 
+	@Override
+	public boolean isIlluminated() {
+		return false;
+	}
+
+	@Override
+	public boolean isVisible() {
+		return Settings.getBoolean(Settings.Key.ENGINE_SHOWCOORDINATESYSTEM);
+	}
+
 	/**
 	 * Render the coordinate system.
 	 */
+	@Override
 	public void render() {
 		axis.render(GL20.GL_LINES, 0, 6);
 	}

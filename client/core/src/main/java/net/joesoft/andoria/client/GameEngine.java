@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +46,9 @@ public class GameEngine {
 	private final Stage stage = new Stage();
 	private final StopWatch stopWatch = new StopWatch();
 	private final Map<Integer, GameObject> gameObjects = new Hashtable<Integer, GameObject>();
+	private final LinkedList<Renderable> renderables = new LinkedList<Renderable>();
 	private final ServerCommunicator com = new ServerCommunicator();
-	private final Skybox skybox;
+	private final Skybox skybox =  new Skybox(1000, false);
 	private float lastRenderDuration;
 
 	/**
@@ -68,9 +70,9 @@ public class GameEngine {
 		com.connect(1);
 		new Thread(com).start();
 
-		final Player player = new Player();
-		gameObjects.put(1, player);
-		skybox = new Skybox(player, 200, false);
+		renderables.add(skybox);
+		renderables.add(terrain);
+		renderables.add(coordinateSystem);
 	}
 
 	private void set3dGlSettings() {
@@ -97,44 +99,32 @@ public class GameEngine {
 
 		processMouseInput();
 		processKeyboardInput();
-//		processCommands();
+		processCommands();
 		moveCamera();
 
-		//===================== 3D stuff =====================
+		// 3D stuff ===============================================================================
 		set3dGlSettings();
-		if(Settings.getBoolean(Settings.Key.ENGINE_SHOWCOORDINATESYSTEM)) {
-			coordinateSystem.render();
-		}
+		renderRenderables();
 
-		skybox.render();
-		if(Settings.getBoolean(Settings.Key.ENGINE_LIGHT)) {
-			lightOn();
-		}
-		terrain.render();
-		lightOff();
-		renderGameObjects();
-		//====================================================
-
-
-		//===================== 2D stuff =====================
+		// 32 stuff ===============================================================================
 		set2dGlSettings();
 		fpsLabel.setVisible(Settings.getBoolean(Settings.Key.UI_SHOWFPS));
 		fpsLabel.setFps(fps);
 		stage.draw();
-		//====================================================
 	}
 
-	private void renderGameObjects() {
-		for(GameObject o : gameObjects.values()) {
-			if(o instanceof Renderable) {
-				final Renderable renderable = (Renderable)o;
-				if(renderable.isIlluminated() && Settings.getBoolean(Settings.Key.ENGINE_LIGHT)) {
-					lightOn();
-				}
-
-				renderable.render();
-				lightOff();
+	private void renderRenderables() {
+		for(Renderable renderable : renderables) {
+			if(!renderable.isVisible()) {
+				continue;
 			}
+
+			if(renderable.isIlluminated() && Settings.getBoolean(Settings.Key.ENGINE_LIGHT)) {
+				lightOn();
+			}
+
+			renderable.render();
+			lightOff();
 		}
 	}
 
@@ -269,7 +259,7 @@ public class GameEngine {
 
 		while(true) {
 			// Limit the command processing to x ms otherwhise this could block the rendering phase.
-			if(System.currentTimeMillis() - startTime > 5) {
+			if(System.currentTimeMillis() - startTime > 1) {
 				break;
 			}
 
@@ -279,7 +269,7 @@ public class GameEngine {
 
 			final Command cmd = com.getCommand();
 			if(cmd instanceof PositionUpdateCmd) {
-
+				updatePosition((PositionUpdateCmd)cmd);
 			} else if (cmd instanceof SpawnObjectCmd) {
 				spawnObject((SpawnObjectCmd)cmd);
 			}
@@ -293,10 +283,21 @@ public class GameEngine {
 		}
 
 		if(cmd.objectType == ObjectType.PLAYER) {
-			gameObjects.put(objectId, new Player());
+			final Player player = new Player();
+			gameObjects.put(objectId, player);
+			renderables.add(player);
 		} else if(cmd.objectType == ObjectType.LIGHT) {
-			gameObjects.put(objectId, new Light());
+			final Light light = new Light();
+			gameObjects.put(objectId, light);
+			renderables.add(light);
 		}
+	}
+
+	private void updatePosition(PositionUpdateCmd cmd) {
+		final GameObject gameObject = gameObjects.get(cmd.objectId);
+		gameObject.x = cmd.x;
+		gameObject.y = cmd.y;
+		gameObject.z = cmd.z;
 	}
 
 	/**

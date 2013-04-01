@@ -6,7 +6,7 @@ package net.joesoft.andoria.brain.commands;
  */
 public class PositionUpdateCmd extends Command {
 	/** position */
-	float x, y, z;
+	public float x, y, z;
 
 	public PositionUpdateCmd(int id) {
 		super(id);

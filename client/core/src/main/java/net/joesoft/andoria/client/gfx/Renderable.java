@@ -5,5 +5,6 @@ package net.joesoft.andoria.client.gfx;
  */
 public interface Renderable {
 	public boolean isIlluminated();
+	public boolean isVisible();
 	public void render();
 }
